@@ -1,10 +1,10 @@
-package kumo.api.backend;
+package kumo.api.api;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class BackendApplicationTests {
+class ApiApplicationTests {
 
 	@Test
 	void contextLoads() {
