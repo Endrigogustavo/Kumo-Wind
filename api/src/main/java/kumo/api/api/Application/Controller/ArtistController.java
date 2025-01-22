@@ -1,10 +1,14 @@
 package kumo.api.api.Application.Controller;
 
+import java.util.Date;
 import java.util.List;
 
 import kumo.api.api.Repository.Repository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -26,12 +30,39 @@ public class ArtistController {
     }
 
     @PostMapping("/createArtist")
-    public ArtistSchema createArtist(@RequestBody ArtistSchema artist) {
-        return repository.save(artist);
+    public ResponseEntity<?> createArtist(@RequestBody ArtistSchema artist) {
+        try {
+            if(artist.getName() == null || artist.getEmail() == null || artist.getPhone() == null || artist.getPass() == null) {
+                return ResponseEntity.badRequest().body("Erro ao criar artista: campos obrigatórios não preenchidos.");
+            }else{
+            artist.setCreatedAt(new Date(System.currentTimeMillis()));
+            artist.setRole("artist");
+            repository.save(artist);
+            return new ResponseEntity<ArtistSchema>(artist, HttpStatus.CREATED);
+            }
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Erro ao criar artista: " + e.getMessage());
+        }      
     }
 
     @GetMapping("/allArtists")
-    public List<ArtistSchema> getAllArtists() {
-        return repository.findAll();
+    public ResponseEntity<?> getAllArtists() {
+        try {
+            if(repository.findAll().isEmpty()){
+                return null;
+            }else{
+                return ResponseEntity.ok(repository.findAll());
+            }
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Erro ao buscar artistas: " + e.getMessage());
+        }
+        
+    }
+
+    @GetMapping("/artistById/{id}")
+    public ArtistSchema getByIdArtist(@PathVariable String id){
+        return repository.findById(id).get();
     }
 }
+
+//https://youtube.com/playlist?list=PLA7e3zmT6XQUjrwAoOHvNu80Axuf-3jft&si=TWLtJJ9TxIBuZnmm

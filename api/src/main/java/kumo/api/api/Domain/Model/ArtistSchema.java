@@ -1,5 +1,7 @@
 package kumo.api.api.Domain.Model;
 
+import java.util.Date;
+
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -10,14 +12,19 @@ public class ArtistSchema {
     private String name;
     private String email;
     private String phone;
+    private String password;
+    private String role;
+    private Date createdAt;
 
     public ArtistSchema() {
     }
 
-    public ArtistSchema(String name, String email, String phone) {
+    public ArtistSchema(String name, String email, String phone, String password, String role) {
         this.name = name;
         this.email = email;
         this.phone = phone;
+        this.password = password;
+        this.role = role;
     }
 
     public String getName() {
@@ -34,6 +41,20 @@ public class ArtistSchema {
         this.email = email;
     }
 
+    public String getPass() {
+        return password;
+    }
+    public void setPass(String password) {
+        this.password = password;
+    }
+
+    public String getRole() {
+        return role;
+    }
+    public void setRole(String role) {
+        this.role = role;
+    }
+
     public String getPhone() {
         return phone;
     }
@@ -41,4 +62,10 @@ public class ArtistSchema {
         this.phone = phone;
     }
 
+    public Date getCreatedAt() {
+        return createdAt;
+    }
+    public void setCreatedAt(Date createdAt) {
+        this.createdAt = createdAt;
+    }
 }
