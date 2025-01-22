@@ -1,0 +1,45 @@
+src
+├── main
+│   ├── java
+│   │   └── com
+│   │       └── exemplo
+│   │           └── projeto
+│   │               ├── controller    # Controladores (Camada Controller)
+│   │               │   ├── UsuarioController.java
+│   │               │   ├── ProdutoController.java
+│   │               │   └── ...
+│   │               ├── model         # Modelos de dados (Camada Model)
+│   │               │   ├── Usuario.java
+│   │               │   ├── Produto.java
+│   │               │   └── ...
+│   │               ├── repository    # Repositórios (Interação com o banco de dados)
+│   │               │   ├── UsuarioRepository.java
+│   │               │   ├── ProdutoRepository.java
+│   │               │   └── ...
+│   │               ├── service       # Serviços (Lógica de negócios)
+│   │               │   ├── UsuarioService.java
+│   │               │   ├── ProdutoService.java
+│   │               │   └── ...
+│   │               ├── config        # Configurações específicas (Segurança, CORS, etc.)
+│   │               │   ├── SecurityConfig.java
+│   │               │   └── CorsConfig.java
+│   │               └── ProjetoApplication.java  # Classe principal com @SpringBootApplication
+│   └── resources
+│       ├── static        # Arquivos estáticos (CSS, JS, Imagens, etc.)
+│       │   ├── css
+│       │   ├── js
+│       │   └── img
+│       ├── templates     # Arquivos de templates (HTML, Thymeleaf, etc.)
+│       │   ├── index.html
+│       │   ├── usuario.html
+│       │   └── ...
+│       ├── application.properties  # Configurações do aplicativo
+│       └── application.yml         # (Alternativa ao application.properties)
+└── test
+    └── java
+        └── com
+            └── exemplo
+                └── projeto
+                    ├── controller
+                    ├── service
+                    └── ...
