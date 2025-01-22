@@ -1,8 +1,5 @@
 package kumo.api.api.Application.Controller;
 
-import java.util.Date;
-import java.util.List;
-
 import kumo.api.api.Repository.Repository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -16,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import org.springframework.web.bind.annotation.RequestBody;
 import kumo.api.api.Domain.Model.ArtistSchema;
+import kumo.api.api.Domain.Services.ArtistService;
 
 @RestController
 @RequestMapping("/artists")
@@ -23,6 +21,9 @@ public class ArtistController {
 
     @Autowired
     private Repository repository;
+
+    @Autowired
+    private ArtistService service;
 
     @GetMapping
     public String getArtist() {
@@ -35,9 +36,7 @@ public class ArtistController {
             if(artist.getName() == null || artist.getEmail() == null || artist.getPhone() == null || artist.getPass() == null) {
                 return ResponseEntity.badRequest().body("Erro ao criar artista: campos obrigatórios não preenchidos.");
             }else{
-            artist.setCreatedAt(new Date(System.currentTimeMillis()));
-            artist.setRole("artist");
-            repository.save(artist);
+            service.createArtist(artist);
             return new ResponseEntity<ArtistSchema>(artist, HttpStatus.CREATED);
             }
         } catch (Exception e) {
