@@ -5,7 +5,7 @@ import java.util.Date;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-@Document(collection = "artists")
+@Document(collection = "artistsTest")
 public class ArtistSchema {
     @Id
     private String id;

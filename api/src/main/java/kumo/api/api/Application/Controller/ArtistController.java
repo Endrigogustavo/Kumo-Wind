@@ -5,9 +5,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CookieValue;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import org.springframework.web.bind.annotation.RestController;
@@ -87,6 +90,59 @@ public class ArtistController {
         } catch (Exception e) {
             return ResponseEntity.badRequest().body("Erro ao buscar artista: " + e.getMessage());
         }
+    }
+
+    @PutMapping("/updateArtist")
+    public ResponseEntity<?> updateArtist(@RequestBody ArtistSchema artist, @CookieValue(value = "token", defaultValue = "null") String token) {
+        try {
+            if(artist.getName() == null || artist.getEmail() == null) {
+                return ResponseEntity.badRequest().body("Erro ao atualizar artista: campos obrigatórios não preenchidos.");
+            }else{
+                service.updateArtist(artist, token);
+                return ResponseEntity.ok(artist);
+            }
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Erro ao atualizar artista: " + e.getMessage());
+        }
+    }
+
+    @PostMapping("/loginArtist")
+    public ResponseEntity<?> loginArtist(@RequestBody ArtistSchema artist, HttpServletResponse response) {
+        try {
+            if (artist.getEmail() == null || artist.getPass() == null) {
+                return ResponseEntity.badRequest().body("Erro ao logar artista: campos obrigatórios não preenchidos.");
+            } else {
+                boolean loginSuccessful = service.loginArtist(artist.getEmail(), artist.getPass(), response);
+                if (loginSuccessful) {
+                    return ResponseEntity.ok().body("Login realizado com sucesso.");
+                } else {
+                    return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Erro ao logar artista: credenciais inválidas.");
+                }
+            }
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Erro ao logar artista: " + e.getMessage());
+        }
+    }
+    
+
+    @PostMapping("/logoutArtist")
+    public ResponseEntity<?> logoutArtist(HttpServletResponse response){
+        try {
+            security.DeleteCookies(response);
+            return ResponseEntity.ok("Logout realizado com sucesso.");
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Erro ao realizar logout: " + e.getMessage());
+        }
+    }
+
+    @PatchMapping("/updateEmail")
+    public ResponseEntity<?> updateEmail(){
+        return null;
+    }
+
+    @DeleteMapping("/deleteArtist")
+    public ResponseEntity<?> deleteArtist(){
+        return null;
     }
 }
 
