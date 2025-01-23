@@ -10,10 +10,11 @@ import org.springframework.stereotype.Service;
 
 import jakarta.servlet.http.HttpServletResponse;
 import kumo.api.api.Application.Configs.SecurityConfig;
+import kumo.api.api.Domain.Interfaces.ArtistInterface;
 import kumo.api.api.Domain.Model.ArtistSchema;
 
 @Service
-public class ArtistService {
+public class ArtistService implements ArtistInterface{
 
     @Autowired
     private Repository repository;
@@ -60,6 +61,14 @@ public class ArtistService {
         }
     }
 
+    public void deleteArtist(String token){
+        try {
+            repository.deleteById(token);
+        } catch (Exception e) {
+            System.err.println("Erro ao deletar artista: " + e.getMessage());
+        }
+    }
+
     public boolean loginArtist(String email, String pass, HttpServletResponse response){
         try {
             ArtistSchema artist = repository.findByEmail(email).get();
@@ -73,6 +82,17 @@ public class ArtistService {
             }
         } catch (Exception e) {
             return false;
+        }
+    }
+
+    public ArtistSchema UpdateEmailArtist(String email, String token){
+        try {
+            ArtistSchema artist = repository.findById(token).get();
+            artist.setEmail(email);
+            repository.save(artist);
+            return artist;
+        } catch (Exception e) {
+            return null;
         }
     }
 }
