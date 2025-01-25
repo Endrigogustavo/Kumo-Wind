@@ -29,6 +29,7 @@ public class ArtistService implements ArtistInterface{
     @Autowired
     private JWTConfig jwtConfig;
 
+
     public ArtistSchema createArtist(ArtistSchema artist){
             artist.setCreatedAt(new Date(System.currentTimeMillis()));
             artist.setPass(encoder.encode(artist.getPass()));
@@ -47,8 +48,7 @@ public class ArtistService implements ArtistInterface{
 
     public ArtistSchema updateArtist(ArtistSchema artist, String token){
         try {
-            String tokenId = jwtConfig.extractUserId(token);
-            ArtistSchema artistToUpdate = repository.findById(tokenId).get();
+            ArtistSchema artistToUpdate = repository.findById(token).get();
             if(artist.getName() != null){
                 artistToUpdate.setName(artist.getName());
             }
@@ -96,6 +96,7 @@ public class ArtistService implements ArtistInterface{
         try {
             ArtistSchema artist = repository.findById(token).get();
             artist.setEmail(email);
+            System.out.println("Get email: " + artist.getEmail());
             repository.save(artist);
             return artist;
         } catch (Exception e) {

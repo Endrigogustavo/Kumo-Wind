@@ -1,6 +1,8 @@
 package kumo.api.api.Application.Controller;
 
 import kumo.api.api.Repository.Repository;
+
+import org.checkerframework.checker.units.qual.C;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -69,10 +71,11 @@ public class ArtistController {
     @GetMapping("/allArtists")
     public ResponseEntity<?> getAllArtists() {
         try {
-            if(repository.findAll().isEmpty()){
+            ;
+            if(service.getAllArtist().isEmpty()){
                 return null;
             }else{
-                return ResponseEntity.ok(repository.findAll());
+                return ResponseEntity.ok(service.getAllArtist());
             }
         } catch (Exception e) {
             return ResponseEntity.badRequest().body("Erro ao buscar artistas: " + e.getMessage());
@@ -109,7 +112,8 @@ public class ArtistController {
             if(artist.getName() == null || artist.getEmail() == null) {
                 return ResponseEntity.badRequest().body("Erro ao atualizar artista: campos obrigatórios não preenchidos.");
             }else{
-                service.updateArtist(artist, token);
+                String tokenId = jwtConfig.extractUserId(token);
+                service.updateArtist(artist, tokenId);
                 return ResponseEntity.ok(artist);
             }
         } catch (Exception e) {
@@ -147,13 +151,37 @@ public class ArtistController {
     }
 
     @PatchMapping("/updateEmail")
-    public ResponseEntity<?> updateEmail(){
-        return null;
+    public ResponseEntity<?> updateEmail(@RequestBody String Email, @CookieValue(value = "token", defaultValue = "null") String token){
+        try {
+            if(Email == null){
+                return ResponseEntity.badRequest().body("Erro ao atualizar o email: campo obrigatório não preenchido.");
+            }else{
+                String tokenId = jwtConfig.extractUserId(token);
+                service.UpdateEmailArtist(Email, tokenId);
+                return ResponseEntity.ok("Email atualizado com sucesso.");
+            }
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Erro ao atualizar o email: " + e.getMessage());
+        }
     }
 
     @DeleteMapping("/deleteArtist")
-    public ResponseEntity<?> deleteArtist(){
-        return null;
+    public ResponseEntity<?> deleteArtist(@CookieValue(value = "token", defaultValue = "null") String token){
+        try {
+            if(token == "null"){
+                return ResponseEntity.badRequest().body("Erro ao deletar artista: token não encontrado.");
+            }
+            if(jwtConfig.isTokenValid(token) == true){
+                String tokenJWT = jwtConfig.extractUserId(token);
+                service.deleteArtist(tokenJWT);
+                return ResponseEntity.ok("Artista deletado com sucesso.");
+            }
+            else{
+                return ResponseEntity.badRequest().body("Erro ao deletar artista: token inválido.");
+            }
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Erro ao deletar artista: " + e.getMessage());
+        }
     }
 
 }
