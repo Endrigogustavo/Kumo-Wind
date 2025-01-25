@@ -13,13 +13,15 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+
 import org.springframework.web.bind.annotation.RestController;
 
 import jakarta.servlet.http.HttpServletResponse;
 
 import org.springframework.web.bind.annotation.RequestBody;
 
-import kumo.api.api.Application.Configs.SecurityConfig;
+import kumo.api.api.Application.Configs.CookieConfig;
+import kumo.api.api.Application.Configs.JWTConfig;
 import kumo.api.api.Domain.Model.ArtistSchema;
 import kumo.api.api.Domain.Services.ArtistService;
 
@@ -34,7 +36,10 @@ public class ArtistController {
     private ArtistService service;
 
     @Autowired
-    private SecurityConfig security;
+    private CookieConfig security;
+
+    @Autowired
+    private JWTConfig jwtConfig;
 
     @GetMapping
     public String getArtist() {
@@ -49,7 +54,8 @@ public class ArtistController {
             }else{
             service.createArtist(artist);
             try {
-                security.CreateCookies(response, artist.getId());
+                String token = jwtConfig.generateToken(artist.getId());
+                security.CreateCookies(response, token);
             } catch (Exception e) {
                 return ResponseEntity.badRequest().body("Erro ao criar cookies: " + e.getMessage());
             }
@@ -84,8 +90,13 @@ public class ArtistController {
         try {
             if(token == "null"){
                 return ResponseEntity.badRequest().body("Erro ao buscar artista: token não encontrado.");
-            }else{
-                return ResponseEntity.ok(repository.findById(token).get());
+            }
+            if(jwtConfig.isTokenValid(token) == true){
+                String tokenJWT = jwtConfig.extractUserId(token);
+                return ResponseEntity.ok(repository.findById(tokenJWT).get());
+            }
+            else{
+                return ResponseEntity.badRequest().body("Erro ao buscar artista: token inválido.");
             }
         } catch (Exception e) {
             return ResponseEntity.badRequest().body("Erro ao buscar artista: " + e.getMessage());
@@ -144,6 +155,5 @@ public class ArtistController {
     public ResponseEntity<?> deleteArtist(){
         return null;
     }
-}
 
-//https://youtube.com/playlist?list=PLA7e3zmT6XQUjrwAoOHvNu80Axuf-3jft&si=TWLtJJ9TxIBuZnmm
+}

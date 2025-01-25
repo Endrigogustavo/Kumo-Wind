@@ -5,7 +5,7 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 
 @Configuration
-public class SecurityConfig {
+public class CookieConfig {
 
     public void CreateCookies( HttpServletResponse response, String token) {
         Cookie cookie = new Cookie("token", token);

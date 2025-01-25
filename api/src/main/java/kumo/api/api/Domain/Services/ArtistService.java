@@ -9,7 +9,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import jakarta.servlet.http.HttpServletResponse;
-import kumo.api.api.Application.Configs.SecurityConfig;
+import kumo.api.api.Application.Configs.CookieConfig;
+import kumo.api.api.Application.Configs.JWTConfig;
 import kumo.api.api.Domain.Interfaces.ArtistInterface;
 import kumo.api.api.Domain.Model.ArtistSchema;
 
@@ -23,7 +24,10 @@ public class ArtistService implements ArtistInterface{
     private PasswordEncoder encoder;
 
     @Autowired
-    private SecurityConfig securityConfig;
+    private CookieConfig securityConfig;
+
+    @Autowired
+    private JWTConfig jwtConfig;
 
     public ArtistSchema createArtist(ArtistSchema artist){
             artist.setCreatedAt(new Date(System.currentTimeMillis()));
@@ -43,7 +47,8 @@ public class ArtistService implements ArtistInterface{
 
     public ArtistSchema updateArtist(ArtistSchema artist, String token){
         try {
-            ArtistSchema artistToUpdate = repository.findById(token).get();
+            String tokenId = jwtConfig.extractUserId(token);
+            ArtistSchema artistToUpdate = repository.findById(tokenId).get();
             if(artist.getName() != null){
                 artistToUpdate.setName(artist.getName());
             }
@@ -63,7 +68,8 @@ public class ArtistService implements ArtistInterface{
 
     public void deleteArtist(String token){
         try {
-            repository.deleteById(token);
+            String tokenId = jwtConfig.extractUserId(token);
+            repository.deleteById(tokenId);
         } catch (Exception e) {
             System.err.println("Erro ao deletar artista: " + e.getMessage());
         }
@@ -73,7 +79,8 @@ public class ArtistService implements ArtistInterface{
         try {
             ArtistSchema artist = repository.findByEmail(email).get();
             if(encoder.matches(pass, artist.getPass())){
-                securityConfig.CreateCookies(response, artist.getId());
+                String token = jwtConfig.generateToken(artist.getId());
+                securityConfig.CreateCookies(response, token);
                 System.out.println("Login realizado com sucesso!");
                 return true;
             }else{
