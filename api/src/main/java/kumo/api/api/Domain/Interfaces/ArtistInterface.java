@@ -2,11 +2,13 @@ package kumo.api.api.Domain.Interfaces;
 
 import java.util.List;
 
+import org.springframework.http.ResponseEntity;
+
 import jakarta.servlet.http.HttpServletResponse;
-import kumo.api.api.Domain.Model.ArtistSchema;
+import kumo.api.api.Domain.Entity.ArtistSchema;
 
 public interface ArtistInterface {
-    ArtistSchema createArtist(ArtistSchema artist);
+    ResponseEntity<?> createArtist(ArtistSchema artist);
     List<ArtistSchema> getAllArtist();
     ArtistSchema updateArtist(ArtistSchema artist, String token);
     void deleteArtist(String token);

@@ -1,4 +1,4 @@
-package kumo.api.api.Domain.Model;
+package kumo.api.api.Domain.Entity;
 
 import java.util.Date;
 

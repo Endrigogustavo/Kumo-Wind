@@ -2,23 +2,28 @@ package kumo.api.api.Domain.Services;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
+import java.util.logging.Logger;
 
-import kumo.api.api.Repository.Repository;
+import kumo.api.api.Repository.UserRepository;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import io.jsonwebtoken.JwtException;
 import jakarta.servlet.http.HttpServletResponse;
 import kumo.api.api.Application.Configs.CookieConfig;
 import kumo.api.api.Application.Configs.JWTConfig;
+import kumo.api.api.Domain.Entity.ArtistSchema;
 import kumo.api.api.Domain.Interfaces.ArtistInterface;
-import kumo.api.api.Domain.Model.ArtistSchema;
 
 @Service
 public class ArtistService implements ArtistInterface{
 
     @Autowired
-    private Repository repository;
+    private UserRepository repository;
 
     @Autowired
     private PasswordEncoder encoder;
@@ -29,14 +34,21 @@ public class ArtistService implements ArtistInterface{
     @Autowired
     private JWTConfig jwtConfig;
 
+    private static final Logger log = Logger.getLogger(ArtistService.class.getName());
 
-    public ArtistSchema createArtist(ArtistSchema artist){
-            artist.setCreatedAt(new Date(System.currentTimeMillis()));
-            artist.setPass(encoder.encode(artist.getPass()));
-            artist.setRole("artist");
-            repository.save(artist);
-            return artist;
+
+    public ResponseEntity<?> createArtist(ArtistSchema artist){
+         if(artist.getName() == null || artist.getEmail() == null || artist.getPhone() == null || artist.getPass() == null) {
+                return ResponseEntity.badRequest().body("Erro ao criar artista: campos obrigatórios não preenchidos.");
+            }else{
+                artist.setCreatedAt(new Date(System.currentTimeMillis()));
+                artist.setPass(encoder.encode(artist.getPass()));
+                artist.setRole("artist");
+                repository.save(artist);
+            return ResponseEntity.ok().body(artist);
+            }
     }
+
 
     public List<ArtistSchema> getAllArtist(){
         try {
@@ -46,6 +58,23 @@ public class ArtistService implements ArtistInterface{
         }
     }
 
+    public ArtistSchema findMyArtist(String token) {
+        try {
+            if (token == null || !jwtConfig.isTokenValid(token)) {
+                throw new JwtException("Token inválido ou ausente");
+            }
+            String tokenId = jwtConfig.extractUserId(token);
+            Optional<ArtistSchema> optionalArtist = repository.findById(tokenId);
+            return optionalArtist.orElse(null);
+        } catch (JwtException e) {
+            log.warning("Erro de validação do token" + e.getMessage());
+        } catch (Exception e) {
+            log.severe("Erro inesperado ao buscar o artista" + e.getMessage());
+        }
+        return null;
+    }
+
+ 
     public ArtistSchema updateArtist(ArtistSchema artist, String token){
         try {
             ArtistSchema artistToUpdate = repository.findById(token).get();
@@ -62,6 +91,7 @@ public class ArtistService implements ArtistInterface{
             repository.save(artistToUpdate);
             return artistToUpdate;
         } catch (Exception e) {
+            System.err.println("Erro ao atualizar artista: " + e.getMessage());
             return null;
         }
     }

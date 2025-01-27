@@ -2,7 +2,7 @@ package kumo.api.api.Domain.Interfaces;
 
 import java.util.List;
 
-import kumo.api.api.Domain.Model.ArtSchema;
+import kumo.api.api.Domain.Entity.ArtSchema;
 
 public interface ArtInterface {
     ArtSchema createArt(ArtSchema art);

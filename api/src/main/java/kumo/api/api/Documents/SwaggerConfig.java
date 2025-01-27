@@ -1,12 +1,18 @@
 package kumo.api.api.Documents;
 
+import java.util.List;
+import java.util.Map;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Contact;
 import io.swagger.v3.oas.models.info.Info;
 import io.swagger.v3.oas.models.info.License;
+import io.swagger.v3.oas.models.security.SecurityRequirement;
+import io.swagger.v3.oas.models.security.SecurityScheme;
 
 @Configuration
 public class SwaggerConfig {
@@ -24,6 +30,11 @@ public class SwaggerConfig {
                 .termsOfService("Termos de uso: Kumo Wind")
                 .license(new License()
                     .name("Licença - Kumo Wind")
-                    .url("https://www.kumowind.com/terms")));
+                    .url("https://www.kumowind.com/terms")))
+            .components(new Components()
+                .securitySchemes(Map.of(
+                    "bearerAuth", new SecurityScheme().type(SecurityScheme.Type.HTTP).scheme("bearer").bearerFormat("JWT")
+                )))
+            .security(List.of(new SecurityRequirement().addList("bearerAuth")));
     }
 }

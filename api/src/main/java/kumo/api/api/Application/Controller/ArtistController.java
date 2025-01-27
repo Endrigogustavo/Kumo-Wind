@@ -1,8 +1,8 @@
 package kumo.api.api.Application.Controller;
 
-import kumo.api.api.Repository.Repository;
 
-import org.checkerframework.checker.units.qual.C;
+import kumo.api.api.Repository.UserRepository;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,7 +24,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 import kumo.api.api.Application.Configs.CookieConfig;
 import kumo.api.api.Application.Configs.JWTConfig;
-import kumo.api.api.Domain.Model.ArtistSchema;
+import kumo.api.api.Domain.Entity.ArtistSchema;
 import kumo.api.api.Domain.Services.ArtistService;
 
 @RestController
@@ -32,7 +32,7 @@ import kumo.api.api.Domain.Services.ArtistService;
 public class ArtistController {
 
     @Autowired
-    private Repository repository;
+    private UserRepository repository;
 
     @Autowired
     private ArtistService service;
@@ -48,31 +48,22 @@ public class ArtistController {
         return "Hello, artist!";
     }
 
-    @PostMapping("/createArtist")
+    @PostMapping("/create")
     public ResponseEntity<?> createArtist(@RequestBody ArtistSchema artist, HttpServletResponse response) {
-        try {
-            if(artist.getName() == null || artist.getEmail() == null || artist.getPhone() == null || artist.getPass() == null) {
-                return ResponseEntity.badRequest().body("Erro ao criar artista: campos obrigatórios não preenchidos.");
-            }else{
-            service.createArtist(artist);
             try {
+                service.createArtist(artist);
                 String token = jwtConfig.generateToken(artist.getId());
                 security.CreateCookies(response, token);
             } catch (Exception e) {
                 return ResponseEntity.badRequest().body("Erro ao criar cookies: " + e.getMessage());
             }
-            return new ResponseEntity<ArtistSchema>(artist, HttpStatus.CREATED);
-            }
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body("Erro ao criar artista: " + e.getMessage());
-        }      
+            return new ResponseEntity<ArtistSchema>(artist, HttpStatus.CREATED); 
     }
 
     @GetMapping("/allArtists")
     public ResponseEntity<?> getAllArtists() {
         try {
-            ;
-            if(service.getAllArtist().isEmpty()){
+            if(service.getAllArtist().isEmpty() && service.getAllArtist() == null){
                 return null;
             }else{
                 return ResponseEntity.ok(service.getAllArtist());
@@ -94,13 +85,7 @@ public class ArtistController {
             if(token == "null"){
                 return ResponseEntity.badRequest().body("Erro ao buscar artista: token não encontrado.");
             }
-            if(jwtConfig.isTokenValid(token) == true){
-                String tokenJWT = jwtConfig.extractUserId(token);
-                return ResponseEntity.ok(repository.findById(tokenJWT).get());
-            }
-            else{
-                return ResponseEntity.badRequest().body("Erro ao buscar artista: token inválido.");
-            }
+                return ResponseEntity.ok(service.findMyArtist(token));
         } catch (Exception e) {
             return ResponseEntity.badRequest().body("Erro ao buscar artista: " + e.getMessage());
         }

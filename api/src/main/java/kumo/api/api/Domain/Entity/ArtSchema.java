@@ -1,4 +1,4 @@
-package kumo.api.api.Domain.Model;
+package kumo.api.api.Domain.Entity;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
