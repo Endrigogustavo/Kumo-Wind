@@ -106,24 +106,6 @@ public class ArtistController {
         }
     }
 
-    @PostMapping("/loginArtist")
-    public ResponseEntity<?> loginArtist(@RequestBody ArtistSchema artist, HttpServletResponse response) {
-        try {
-            if (artist.getEmail() == null || artist.getPass() == null) {
-                return ResponseEntity.badRequest().body("Erro ao logar artista: campos obrigatórios não preenchidos.");
-            } else {
-                boolean loginSuccessful = service.loginArtist(artist.getEmail(), artist.getPass(), response);
-                if (loginSuccessful) {
-                    return ResponseEntity.ok().body("Login realizado com sucesso.");
-                } else {
-                    return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Erro ao logar artista: credenciais inválidas.");
-                }
-            }
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body("Erro ao logar artista: " + e.getMessage());
-        }
-    }
-    
 
     @PostMapping("/logoutArtist")
     public ResponseEntity<?> logoutArtist(HttpServletResponse response){

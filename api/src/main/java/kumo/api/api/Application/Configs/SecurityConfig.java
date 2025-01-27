@@ -45,7 +45,14 @@ public class SecurityConfig {
             ).permitAll()
             .requestMatchers("/art/**").authenticated()
             .requestMatchers("/admin/**").hasRole("Admin")
-            .anyRequest().permitAll();
+            .anyRequest().authenticated()
+            .and()
+            .formLogin()  
+                .loginProcessingUrl("/login")  
+                .usernameParameter("email")  
+                .passwordParameter("password") 
+            .and()
+            .httpBasic();
 
         return http.build();
     }
