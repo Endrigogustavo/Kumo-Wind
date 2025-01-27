@@ -7,13 +7,13 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import jakarta.servlet.http.HttpServletResponse;
-import kumo.api.api.Application.Configs.CookieConfig;
 import kumo.api.api.Application.Configs.JWTConfig;
 import kumo.api.api.Domain.Services.ArtistService;
 
@@ -21,13 +21,9 @@ import kumo.api.api.Domain.Services.ArtistService;
 @CrossOrigin(origins = "http://localhost:8080")
 @RequestMapping("/auth")
 public class LoginArtist {
-    
 
     private final AuthenticationManager authenticationManager;
     private final JWTConfig jwtConfig;
-
-    @Autowired
-    private CookieConfig cookieConfig;
 
     @Autowired
     private ArtistService service;
@@ -38,20 +34,44 @@ public class LoginArtist {
         this.jwtConfig = jwtConfig;
     }
 
-
-   @PostMapping("/login")
-   public ResponseEntity<String> login(@RequestParam String email, @RequestParam String password, HttpServletResponse response) {
+    @PostMapping("/login")
+    public ResponseEntity<String> login(@RequestParam String email, @RequestParam String password,
+            HttpServletResponse response) {
         try {
             service.loginArtist(email, password, response);
             Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(email, password)
-            );
+                    new UsernamePasswordAuthenticationToken(email, password));
             SecurityContextHolder.getContext().setAuthentication(authentication);
-            
+
             return ResponseEntity.ok("Login bem-sucedido" + authentication);
 
         } catch (Exception e) {
             return ResponseEntity.status(401).body("Credenciais inválidas");
         }
     }
+
+    @GetMapping("/user-auth")
+    public Authentication getCurrentUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null || !authentication.isAuthenticated()) {
+            throw new IllegalStateException("No user is currently authenticated.");
+        }
+        return authentication;
+    }
+
+    @GetMapping("/user-details")
+    public Object getUserDetails() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null || !authentication.isAuthenticated()) {
+            throw new IllegalStateException("No user is currently authenticated.");
+        }
+        return authentication.getPrincipal();
+    }
+
+    @PostMapping("/logout")
+    public String logout() {
+        SecurityContextHolder.clearContext();
+        return "User logged out successfully.";
+    }
+
 }

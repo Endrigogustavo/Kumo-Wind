@@ -6,6 +6,7 @@ import java.util.Optional;
 import java.util.logging.Logger;
 
 import kumo.api.api.Repository.UserRepository;
+import lombok.SneakyThrows;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -14,13 +15,13 @@ import org.springframework.stereotype.Service;
 
 import io.jsonwebtoken.JwtException;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.Valid;
 import kumo.api.api.Application.Configs.CookieConfig;
 import kumo.api.api.Application.Configs.JWTConfig;
 import kumo.api.api.Domain.Entity.ArtistSchema;
-import kumo.api.api.Domain.Interfaces.ArtistInterface;
 
 @Service
-public class ArtistService implements ArtistInterface{
+public class ArtistService {
 
     @Autowired
     private UserRepository repository;
@@ -37,19 +38,22 @@ public class ArtistService implements ArtistInterface{
     private static final Logger log = Logger.getLogger(ArtistService.class.getName());
 
 
-    public ResponseEntity<?> createArtist(ArtistSchema artist){
-         if(artist.getName() == null || artist.getEmail() == null || artist.getPhone() == null || artist.getPass() == null) {
+    @SneakyThrows
+    public ResponseEntity<?> createArtist(ArtistSchema artist, HttpServletResponse response){
+         if(artist.getName() == null || artist.getEmail() == null || artist.getPhone() == null || artist.getPassword() == null) {
                 return ResponseEntity.badRequest().body("Erro ao criar artista: campos obrigatórios não preenchidos.");
             }else{
                 artist.setCreatedAt(new Date(System.currentTimeMillis()));
-                artist.setPass(encoder.encode(artist.getPass()));
+                artist.setPassword(encoder.encode(artist.getPassword()));
                 artist.setRole("artist");
+                String token = jwtConfig.generateToken(artist.getId());
+                securityConfig.CreateCookies(response, token);
                 repository.save(artist);
             return ResponseEntity.ok().body(artist);
             }
     }
 
-
+    @SneakyThrows
     public List<ArtistSchema> getAllArtist(){
         try {
             return repository.findAll();
@@ -58,6 +62,7 @@ public class ArtistService implements ArtistInterface{
         }
     }
 
+    @SneakyThrows
     public ArtistSchema findMyArtist(String token) {
         try {
             if (token == null || !jwtConfig.isTokenValid(token)) {
@@ -74,41 +79,70 @@ public class ArtistService implements ArtistInterface{
         return null;
     }
 
- 
-    public ArtistSchema updateArtist(ArtistSchema artist, String token){
+    @SneakyThrows
+    public ResponseEntity<?> updateArtist(@Valid ArtistSchema artist, String token){
         try {
-            ArtistSchema artistToUpdate = repository.findById(token).get();
-            if(artist.getName() != null){
-                artistToUpdate.setName(artist.getName());
+            if(artist.getName() == null || artist.getEmail() == null) {
+                return ResponseEntity.badRequest().body("Erro ao atualizar artista: campos obrigatórios não preenchidos.");
             }
-            if(artist.getEmail() != null){
-                artistToUpdate.setEmail(artist.getEmail());
-            }
-            if(artist.getPhone() != null){
-                artistToUpdate.setPhone(artist.getPhone());
-            }
+
+            String tokenId = jwtConfig.extractUserId(token);
+            
+            ArtistSchema artistToUpdate = repository.findById(tokenId).orElseThrow(() -> new IllegalArgumentException("Artista não encontrado"));;
+           
+            if (artist.getName() != null) artistToUpdate.setName(artist.getName());
+            if (artist.getEmail() != null) artistToUpdate.setEmail(artist.getEmail());
+            if (artist.getPhone() != null) artistToUpdate.setPhone(artist.getPhone());
 
             repository.save(artistToUpdate);
-            return artistToUpdate;
+            return ResponseEntity.ok().body(artistToUpdate);
         } catch (Exception e) {
             System.err.println("Erro ao atualizar artista: " + e.getMessage());
-            return null;
+            return ResponseEntity.badRequest().body("Erro ao atualizar o artista" + e.getMessage());
         }
     }
 
-    public void deleteArtist(String token){
+    @SneakyThrows
+    public ResponseEntity<?> UpdateEmailArtist(String email, String token){
         try {
+            if(email == null){
+                return ResponseEntity.badRequest().body("Erro ao atualizar o email: campo obrigatório não preenchido.");
+            }
+            
             String tokenId = jwtConfig.extractUserId(token);
-            repository.deleteById(tokenId);
+
+            ArtistSchema artist = repository.findById(tokenId).get();
+            artist.setEmail(email);
+            System.out.println("Get email: " + artist.getEmail());
+            repository.save(artist);
+            return ResponseEntity.ok().body(artist);
         } catch (Exception e) {
-            System.err.println("Erro ao deletar artista: " + e.getMessage());
+            return ResponseEntity.badRequest().body("Erro ao atualizar o email " +e.getMessage());
         }
     }
 
+    @SneakyThrows
+    public ResponseEntity<?> deleteArtist(String token){
+        try {
+            if (token == "null") {
+                return ResponseEntity.badRequest().body("Erro ao deletar artista: token não encontrado.");
+            }
+            if (jwtConfig.isTokenValid(token) == true) {
+                String tokenJWT = jwtConfig.extractUserId(token);
+                repository.deleteById(tokenJWT);
+                return ResponseEntity.ok().body("Artista deletado com sucesso!!!");
+            }
+            return ResponseEntity.ok().body("Artista deletado com sucesso!!!");
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Erro ao deletar o artista " + e.getMessage());
+        }
+    }
+
+    @SneakyThrows
     public boolean loginArtist(String email, String pass, HttpServletResponse response){
         try {
             ArtistSchema artist = repository.findByEmail(email).get();
-            if(encoder.matches(pass, artist.getPass())){
+            if(encoder.matches(pass, artist.getPassword())){
                 String token = jwtConfig.generateToken(artist.getId());
                 securityConfig.CreateCookies(response, token);
                 System.out.println("Login realizado com sucesso!");
@@ -122,15 +156,5 @@ public class ArtistService implements ArtistInterface{
         }
     }
 
-    public ArtistSchema UpdateEmailArtist(String email, String token){
-        try {
-            ArtistSchema artist = repository.findById(token).get();
-            artist.setEmail(email);
-            System.out.println("Get email: " + artist.getEmail());
-            repository.save(artist);
-            return artist;
-        } catch (Exception e) {
-            return null;
-        }
-    }
+
 }
