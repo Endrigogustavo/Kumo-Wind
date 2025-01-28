@@ -20,7 +20,8 @@ import kumo.api.api.Application.Exception.CustomAuthenticationEntryPoint;
 public class SecurityConfig {
 
     
-    private static final AuthenticationEntryPoint CustomAuthenticationEntryPoint;
+    private static final AuthenticationEntryPoint CustomAuthenticationEntryPoint = new CustomAuthenticationEntryPoint();
+    
     @Autowired
     private final CustomUserDetailsService customUserDetailsService;
 

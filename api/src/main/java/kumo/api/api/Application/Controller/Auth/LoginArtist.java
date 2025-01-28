@@ -1,4 +1,4 @@
-package kumo.api.api.Application.Dto;
+package kumo.api.api.Application.Controller.Auth;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

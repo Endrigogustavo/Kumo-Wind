@@ -1,6 +1,6 @@
-package kumo.api.api.Application.Dto;
+package kumo.api.api.Application.Dto.Response;
 
-public class LoginArtistRequest {
+public class LoginResponseDTO{
     
     private String email;
     private String password;

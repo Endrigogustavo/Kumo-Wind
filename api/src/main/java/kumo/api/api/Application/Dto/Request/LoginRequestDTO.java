@@ -1,10 +1,10 @@
-package kumo.api.api.Application.Dto;
+package kumo.api.api.Application.Dto.Request;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
-public record LoginRequestDto(
+public record LoginRequestDTO(
     @NotBlank(message = "Email cannot be empty.")
     @Email
     String email, 
