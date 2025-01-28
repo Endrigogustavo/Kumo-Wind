@@ -18,6 +18,8 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import kumo.api.api.Application.Configs.Security.CookieConfig;
 import kumo.api.api.Application.Configs.Security.JWTConfig;
+import kumo.api.api.Application.Dto.Request.UpdateUserDTO;
+import kumo.api.api.Application.Dto.Response.UpdateResponseDTO;
 import kumo.api.api.Domain.Entity.ArtistSchema;
 
 @Service
@@ -85,12 +87,8 @@ public class ArtistService {
 
  
     @SneakyThrows
-    public ResponseEntity<?> updateArtist(@Valid ArtistSchema artist, String token){
+    public UpdateResponseDTO updateArtist(@Valid UpdateUserDTO artist, String token){
         try {
-            if(artist.getName() == null || artist.getEmail() == null) {
-                return ResponseEntity.badRequest().body("Erro ao atualizar artista: campos obrigatórios não preenchidos.");
-            }
-
             String tokenId = jwtConfig.extractUserId(token);
             
             ArtistSchema artistToUpdate = repository.findById(tokenId).orElseThrow(() -> new IllegalArgumentException("Artista não encontrado"));;
@@ -99,11 +97,11 @@ public class ArtistService {
             if (artist.getEmail() != null) artistToUpdate.setEmail(artist.getEmail());
             if (artist.getPhone() != null) artistToUpdate.setPhone(artist.getPhone());
 
-            repository.save(artistToUpdate);
-            return ResponseEntity.ok().body(artistToUpdate);
+            ArtistSchema updated = repository.save(artistToUpdate);
+            return new UpdateResponseDTO(updated.getName(), updated.getEmail(), updated.getPhone());
         } catch (Exception e) {
             System.err.println("Erro ao atualizar artista: " + e.getMessage());
-            return ResponseEntity.badRequest().body("Erro ao atualizar o artista" + e.getMessage());
+            return null;
         }
     }
 

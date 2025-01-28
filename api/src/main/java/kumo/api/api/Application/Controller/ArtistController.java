@@ -17,10 +17,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.Valid;
 
 import org.springframework.web.bind.annotation.RequestBody;
 
 import kumo.api.api.Application.Configs.Security.CookieConfig;
+import kumo.api.api.Application.Dto.Request.UpdateUserDTO;
+import kumo.api.api.Application.Dto.Response.UpdateResponseDTO;
 import kumo.api.api.Domain.Entity.ArtistSchema;
 import kumo.api.api.Domain.Services.ArtistService;
 
@@ -77,10 +80,11 @@ public class ArtistController {
     }
 
     @PutMapping("/updateArtist")
-    public ResponseEntity<?> updateArtist(@RequestBody ArtistSchema artist,
+    public ResponseEntity<?> updateArtist(@RequestBody @Valid UpdateUserDTO artist,
             @CookieValue(value = "token", defaultValue = "null") String token) {
         try {
-            return ResponseEntity.ok(service.updateArtist(artist, token));
+            UpdateResponseDTO result = service.updateArtist(artist, token);
+            return ResponseEntity.ok(result);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body("Erro ao atualizar artista: " + e.getMessage());
         }
