@@ -10,12 +10,17 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
+
+import kumo.api.api.Application.Exception.CustomAuthenticationEntryPoint;
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
 
+    
+    private static final AuthenticationEntryPoint CustomAuthenticationEntryPoint;
     @Autowired
     private final CustomUserDetailsService customUserDetailsService;
 
@@ -52,6 +57,7 @@ public class SecurityConfig {
                 .usernameParameter("email")  
                 .passwordParameter("password") 
             .and()
+            .exceptionHandling(exception -> exception.authenticationEntryPoint(CustomAuthenticationEntryPoint))
             .httpBasic();
 
         return http.build();
