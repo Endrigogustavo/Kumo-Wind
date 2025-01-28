@@ -1,4 +1,4 @@
-package kumo.api.api.Application.Configs;
+package kumo.api.api.Application.Configs.Cors;
 
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.context.annotation.Configuration;

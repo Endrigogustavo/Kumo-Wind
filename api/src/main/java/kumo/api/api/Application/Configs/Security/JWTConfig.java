@@ -1,4 +1,4 @@
-package kumo.api.api.Application.Configs;
+package kumo.api.api.Application.Configs.Security;
 
 import java.util.Date;
 

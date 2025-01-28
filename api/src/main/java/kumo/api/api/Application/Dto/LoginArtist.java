@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import jakarta.servlet.http.HttpServletResponse;
-import kumo.api.api.Application.Configs.JWTConfig;
+import kumo.api.api.Application.Configs.Security.JWTConfig;
 import kumo.api.api.Domain.Services.ArtistService;
 
 @RestController

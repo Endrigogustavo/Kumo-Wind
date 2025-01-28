@@ -20,8 +20,7 @@ import jakarta.servlet.http.HttpServletResponse;
 
 import org.springframework.web.bind.annotation.RequestBody;
 
-import kumo.api.api.Application.Configs.CookieConfig;
-import kumo.api.api.Application.Configs.JWTConfig;
+import kumo.api.api.Application.Configs.Security.CookieConfig;
 import kumo.api.api.Domain.Entity.ArtistSchema;
 import kumo.api.api.Domain.Services.ArtistService;
 
@@ -38,8 +37,6 @@ public class ArtistController {
     @Autowired
     private CookieConfig security;
 
-    @Autowired
-    private JWTConfig jwtConfig;
 
     @GetMapping
     public String getArtist() {
@@ -59,11 +56,7 @@ public class ArtistController {
     @GetMapping("/allArtists")
     public ResponseEntity<?> getAllArtists() {
         try {
-            if (service.getAllArtist().isEmpty() && service.getAllArtist() == null) {
-                return null;
-            } else {
-                return ResponseEntity.ok(service.getAllArtist());
-            }
+            return ResponseEntity.ok(service.getAllArtist());
         } catch (Exception e) {
             return ResponseEntity.badRequest().body("Erro ao buscar artistas: " + e.getMessage());
         }
@@ -87,8 +80,7 @@ public class ArtistController {
     public ResponseEntity<?> updateArtist(@RequestBody ArtistSchema artist,
             @CookieValue(value = "token", defaultValue = "null") String token) {
         try {
-            service.updateArtist(artist, token);
-            return ResponseEntity.ok(artist);
+            return ResponseEntity.ok(service.updateArtist(artist, token));
         } catch (Exception e) {
             return ResponseEntity.badRequest().body("Erro ao atualizar artista: " + e.getMessage());
         }

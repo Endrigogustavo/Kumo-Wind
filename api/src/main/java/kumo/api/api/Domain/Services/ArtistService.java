@@ -16,8 +16,8 @@ import org.springframework.stereotype.Service;
 import io.jsonwebtoken.JwtException;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
-import kumo.api.api.Application.Configs.CookieConfig;
-import kumo.api.api.Application.Configs.JWTConfig;
+import kumo.api.api.Application.Configs.Security.CookieConfig;
+import kumo.api.api.Application.Configs.Security.JWTConfig;
 import kumo.api.api.Domain.Entity.ArtistSchema;
 
 @Service
@@ -56,7 +56,11 @@ public class ArtistService {
     @SneakyThrows
     public List<ArtistSchema> getAllArtist(){
         try {
-            return repository.findAll();
+            if (repository.findAll().isEmpty() && repository.findAll() == null) {
+                return null;
+            } else {
+                return repository.findAll();
+            }
         } catch (Exception e) {
             return null;
         }
@@ -79,6 +83,7 @@ public class ArtistService {
         return null;
     }
 
+ 
     @SneakyThrows
     public ResponseEntity<?> updateArtist(@Valid ArtistSchema artist, String token){
         try {
