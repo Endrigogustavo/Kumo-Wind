@@ -24,7 +24,6 @@ public class CustomUserDetailsService implements UserDetailsService {
         ArtistSchema user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException("Usuário não encontrado: " + email));
 
-                
         return org.springframework.security.core.userdetails.User
                 .withUsername(user.getEmail())
                 .password(user.getPassword())

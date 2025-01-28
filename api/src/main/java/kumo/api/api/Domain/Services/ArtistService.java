@@ -18,7 +18,9 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import kumo.api.api.Application.Configs.Security.CookieConfig;
 import kumo.api.api.Application.Configs.Security.JWTConfig;
+import kumo.api.api.Application.Dto.Request.CreateRequestDTO;
 import kumo.api.api.Application.Dto.Request.UpdateUserDTO;
+import kumo.api.api.Application.Dto.Response.CreateResponseDTO;
 import kumo.api.api.Application.Dto.Response.UpdateResponseDTO;
 import kumo.api.api.Domain.Entity.ArtistSchema;
 
@@ -41,18 +43,20 @@ public class ArtistService {
 
 
     @SneakyThrows
-    public ResponseEntity<?> createArtist(ArtistSchema artist, HttpServletResponse response){
-         if(artist.getName() == null || artist.getEmail() == null || artist.getPhone() == null || artist.getPassword() == null) {
-                return ResponseEntity.badRequest().body("Erro ao criar artista: campos obrigatórios não preenchidos.");
-            }else{
-                artist.setCreatedAt(new Date(System.currentTimeMillis()));
+    public CreateResponseDTO createArtist(CreateRequestDTO artist, HttpServletResponse response){
+                ArtistSchema artistCreate = new ArtistSchema();
+                
                 artist.setPassword(encoder.encode(artist.getPassword()));
-                artist.setRole("artist");
-                String token = jwtConfig.generateToken(artist.getId());
+                artistCreate.setCreatedAt(new Date(System.currentTimeMillis()));
+                artistCreate.setPassword(artist.getPassword());
+                artistCreate.setRole("artist");
+                artistCreate.setEmail(artist.getEmail());
+                artistCreate.setPhone(artist.getPhone());
+                artistCreate.setName(artist.getName());
+                String token = jwtConfig.generateToken(artistCreate.getId());
                 securityConfig.CreateCookies(response, token);
-                repository.save(artist);
-            return ResponseEntity.ok().body(artist);
-            }
+                repository.save(artistCreate);
+            return new CreateResponseDTO(artist.getName(), artist.getEmail(), artist.getPhone(), artist.getPassword());
     }
 
     @SneakyThrows

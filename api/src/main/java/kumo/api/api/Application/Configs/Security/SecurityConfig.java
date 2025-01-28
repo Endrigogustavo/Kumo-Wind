@@ -8,15 +8,17 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
-
 
     @Autowired
     private final CustomUserDetailsService customUserDetailsService;
@@ -34,27 +36,40 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-            .csrf().disable()
-            .authorizeRequests()
-            .requestMatchers(HttpMethod.POST, "/artist/create/**").permitAll()
-            .requestMatchers(HttpMethod.POST, "/artist/login/**").permitAll()
-            .requestMatchers(HttpMethod.GET, "/artist/allArtists/").permitAll()
-            .requestMatchers(
-                "/swagger-ui/**", 
-                "/v3/api-docs/**",
-                "/swagger-ui.html",
-                "/webjars/**"
-            ).permitAll()
-            .requestMatchers("/art/**").authenticated()
-            .requestMatchers("/admin/**").hasRole("Admin")
-            .anyRequest().permitAll()
-            .and()
-            .formLogin()  
-                .loginProcessingUrl("/login")  
-                .usernameParameter("email")  
-                .passwordParameter("password") 
-            .and()
-            .httpBasic();
+                .csrf().disable()
+                .authorizeRequests()
+                .requestMatchers(HttpMethod.POST, "/artist/create/**").permitAll()
+                .requestMatchers(HttpMethod.POST, "/artist/login/**").permitAll()
+                .requestMatchers(HttpMethod.GET, "/artist/allArtists/").permitAll()
+                .requestMatchers(
+                        "/swagger-ui/**",
+                        "/v3/api-docs/**",
+                        "/swagger-ui.html",
+                        "/webjars/**")
+                .permitAll()
+                .requestMatchers("/art/**").authenticated()
+                .requestMatchers("/admin/**").hasRole("Admin")
+                .anyRequest().authenticated()
+                .and()
+                .formLogin()
+                .loginProcessingUrl("/login")
+                .usernameParameter("email")
+                .passwordParameter("password")
+                .and()
+                .logout()
+                .logoutUrl("/logout")
+                .logoutSuccessHandler((request, response, authentication) -> {
+                    SecurityContextHolder.clearContext();
+                    HttpSession session = request.getSession(false);
+                    if (session != null) {
+                        session.invalidate();
+                    }
+                    response.setStatus(HttpServletResponse.SC_OK);
+                })
+                .invalidateHttpSession(true)
+                .deleteCookies("token", "JSESSIONID")
+                .and()
+                .httpBasic();
 
         return http.build();
     }

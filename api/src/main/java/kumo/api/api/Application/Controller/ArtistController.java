@@ -3,7 +3,6 @@ package kumo.api.api.Application.Controller;
 import kumo.api.api.Repository.UserRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -22,7 +21,9 @@ import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import kumo.api.api.Application.Configs.Security.CookieConfig;
+import kumo.api.api.Application.Dto.Request.CreateRequestDTO;
 import kumo.api.api.Application.Dto.Request.UpdateUserDTO;
+import kumo.api.api.Application.Dto.Response.CreateResponseDTO;
 import kumo.api.api.Application.Dto.Response.UpdateResponseDTO;
 import kumo.api.api.Domain.Entity.ArtistSchema;
 import kumo.api.api.Domain.Services.ArtistService;
@@ -47,13 +48,13 @@ public class ArtistController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<?> createArtist(@RequestBody ArtistSchema artist, HttpServletResponse response) {
+    public ResponseEntity<?> createArtist(@RequestBody CreateRequestDTO artist, HttpServletResponse response) {
         try {
-            service.createArtist(artist, response);
+            CreateResponseDTO responseCreate = service.createArtist(artist, response);
+            return ResponseEntity.ok().body(responseCreate);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body("Erro ao criar cookies: " + e.getMessage());
         }
-        return new ResponseEntity<ArtistSchema>(artist, HttpStatus.CREATED);
     }
 
     @GetMapping("/allArtists")
@@ -79,7 +80,7 @@ public class ArtistController {
         }
     }
 
-    @PutMapping("/updateArtist")
+    @PutMapping("/update")
     public ResponseEntity<?> updateArtist(@RequestBody @Valid UpdateUserDTO artist,
             @CookieValue(value = "token", defaultValue = "null") String token) {
         try {
@@ -87,16 +88,6 @@ public class ArtistController {
             return ResponseEntity.ok(result);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body("Erro ao atualizar artista: " + e.getMessage());
-        }
-    }
-
-    @PostMapping("/logoutArtist")
-    public ResponseEntity<?> logoutArtist(HttpServletResponse response) {
-        try {
-            security.DeleteCookies(response);
-            return ResponseEntity.ok("Logout realizado com sucesso.");
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body("Erro ao realizar logout: " + e.getMessage());
         }
     }
 
@@ -110,7 +101,7 @@ public class ArtistController {
         }
     }
 
-    @DeleteMapping("/deleteArtist")
+    @DeleteMapping("/delete")
     public ResponseEntity<?> deleteArtist(@CookieValue(value = "token", defaultValue = "null") String token) {
         try {
             return ResponseEntity.ok(service.deleteArtist(token));
