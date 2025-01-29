@@ -11,7 +11,10 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.FilterChainProxy;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.AnonymousAuthenticationFilter;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
@@ -28,53 +31,52 @@ public class SecurityConfig {
     }
 
     @Bean
+    public AnonymousAccessFilter anonymousAccessFilter() {
+        return new AnonymousAccessFilter();
+    }
+
+    @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
-    @SuppressWarnings({ "deprecation", "removal" })
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http
+        http.addFilterBefore(anonymousAccessFilter(), UsernamePasswordAuthenticationFilter.class)
                 .csrf().disable()
-                .authorizeRequests()
-                .requestMatchers(HttpMethod.POST, "/artist/create/**").permitAll()
-                .requestMatchers(HttpMethod.POST, "/artist/login/**").permitAll()
-                .requestMatchers(HttpMethod.GET, "/artist/allArtists/").permitAll()
-                .requestMatchers(
-                        "/swagger-ui/**",
-                        "/v3/api-docs/**",
-                        "/swagger-ui.html",
-                        "/webjars/**")
-                .permitAll()
-                .requestMatchers("/art/**").authenticated()
-                .requestMatchers("/admin/**").hasRole("Admin")
-                .anyRequest().authenticated()
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers(HttpMethod.POST, "/artists/create").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/auth/login").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/artists/allArtists").permitAll()
+                        .requestMatchers(
+                                "/swagger-ui/**",
+                                "/v3/api-docs/**",
+                                "/swagger-ui.html",
+                                "/webjars/**").permitAll()
+                        .requestMatchers("/art/**").authenticated()
+                        .requestMatchers("/admin/**").hasRole("Admin")
+                        .anyRequest().authenticated()
+                )
+                .anonymous()
                 .and()
-                .formLogin()
-                .loginProcessingUrl("/login")
-                .usernameParameter("email")
-                .passwordParameter("password")
-                .and()
-                .logout()
-                .logoutUrl("/logout")
-                .logoutSuccessHandler((request, response, authentication) -> {
-                    SecurityContextHolder.clearContext();
-                    HttpSession session = request.getSession(false);
-                    if (session != null) {
-                        session.invalidate();
-                    }
-                    response.setStatus(HttpServletResponse.SC_OK);
-                })
-                .invalidateHttpSession(true)
-                .deleteCookies("token", "JSESSIONID")
-                .and()
+                .logout(logout -> logout
+                        .logoutUrl("/auth/logout").permitAll()
+                        .logoutSuccessHandler((request, response, authentication) -> {
+                            SecurityContextHolder.clearContext();
+                            HttpSession session = request.getSession(false);
+                            if (session != null) {
+                                session.invalidate();
+                            }
+                            response.setStatus(HttpServletResponse.SC_OK);
+                        })
+                        .invalidateHttpSession(true)
+                        .deleteCookies("token", "JSESSIONID")
+                )
                 .httpBasic();
 
         return http.build();
     }
 
-    @SuppressWarnings("removal")
     @Bean
     public AuthenticationManager authenticationManager(HttpSecurity http) throws Exception {
         return http.getSharedObject(AuthenticationManagerBuilder.class)

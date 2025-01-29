@@ -14,6 +14,18 @@ import io.swagger.v3.oas.models.info.License;
 import io.swagger.v3.oas.models.security.SecurityRequirement;
 import io.swagger.v3.oas.models.security.SecurityScheme;
 
+/*
+@OpenAPIDefinition(
+    info = @Info(title = "Kumo Wind API", version = "1.0"),
+    security = @SecurityRequirement(name = "bearerAuth")
+)
+@SecurityScheme(
+    name = "bearerAuth",
+    type = SecuritySchemeType.HTTP,
+    scheme = "bearer",
+    bearerFormat = "JWT"
+)
+*/
 @Configuration
 public class SwaggerConfig {
     @Bean
