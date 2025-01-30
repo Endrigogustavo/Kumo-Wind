@@ -9,21 +9,17 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import org.springframework.web.bind.annotation.RestController;
 
-import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 
 import org.springframework.web.bind.annotation.RequestBody;
 
 import kumo.api.api.Application.Configs.Security.CookieConfig;
-import kumo.api.api.Application.Dto.Request.CreateRequestDTO;
 import kumo.api.api.Application.Dto.Request.UpdateUserDTO;
-import kumo.api.api.Application.Dto.Response.CreateResponseDTO;
 import kumo.api.api.Application.Dto.Response.UpdateResponseDTO;
 import kumo.api.api.Domain.Entity.ArtistSchema;
 import kumo.api.api.Domain.Services.ArtistService;
@@ -45,16 +41,6 @@ public class ArtistController {
     @GetMapping
     public String getArtist() {
         return "Hello, artist!";
-    }
-
-    @PostMapping("/create")
-    public ResponseEntity<?> createArtist(@RequestBody CreateRequestDTO artist, HttpServletResponse response) {
-        try {
-            CreateResponseDTO responseCreate = service.createArtist(artist, response);
-            return ResponseEntity.ok().body(responseCreate);
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body("Erro ao criar cookies: " + e.getMessage());
-        }
     }
 
     @GetMapping("/allArtists")

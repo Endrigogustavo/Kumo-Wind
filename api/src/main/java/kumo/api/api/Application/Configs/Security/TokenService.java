@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
+import java.util.Date;
 
 @Service
 public class TokenService {
@@ -34,6 +35,21 @@ public class TokenService {
         }
     }
 
+    public String generateTokenId(String id){
+        try {
+            Algorithm algorithm = Algorithm.HMAC256(secret);
+
+            String token = JWT.create()
+                    .withIssuer("login-auth-api")
+                    .withSubject(id)
+                    .withExpiresAt(this.generateExpirationDate())
+                    .sign(algorithm);
+            return token;
+        } catch (JWTCreationException exception){
+            throw new RuntimeException("Error while authenticating");
+        }
+    }
+
     public String validateToken(String token){
         try {
             Algorithm algorithm = Algorithm.HMAC256(secret);
@@ -42,6 +58,29 @@ public class TokenService {
                     .build()
                     .verify(token)
                     .getSubject();
+        } catch (JWTVerificationException exception) {
+            return null;
+        }
+    }
+
+    public boolean isTokenValid(String token) {
+        try {
+            Algorithm algorithm = Algorithm.HMAC256(secret);
+            Date expirationDate = JWT.decode(token).getExpiresAt();
+            return expirationDate != null && expirationDate.after(new Date());
+        } catch (JWTVerificationException exception) {
+            return false;
+        }
+    }
+
+    public String extractUserId(String token) {
+        try {
+            Algorithm algorithm = Algorithm.HMAC256(secret);
+            return JWT.require(algorithm)
+                      .withIssuer("login-auth-api")
+                      .build()
+                      .verify(token)
+                      .getSubject();
         } catch (JWTVerificationException exception) {
             return null;
         }

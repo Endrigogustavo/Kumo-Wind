@@ -9,7 +9,4 @@ import lombok.Setter;
 @AllArgsConstructor
 public class CreateResponseDTO {
     private String name;
-    private String email;
-    private String password;
-    private String phone;
 }

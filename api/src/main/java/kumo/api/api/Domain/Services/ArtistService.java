@@ -1,6 +1,5 @@
 package kumo.api.api.Domain.Services;
 
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.logging.Logger;
@@ -18,9 +17,8 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import kumo.api.api.Application.Configs.Security.CookieConfig;
 import kumo.api.api.Application.Configs.Security.JWTConfig;
-import kumo.api.api.Application.Dto.Request.CreateRequestDTO;
+import kumo.api.api.Application.Configs.Security.TokenService;
 import kumo.api.api.Application.Dto.Request.UpdateUserDTO;
-import kumo.api.api.Application.Dto.Response.CreateResponseDTO;
 import kumo.api.api.Application.Dto.Response.UpdateResponseDTO;
 import kumo.api.api.Domain.Entity.ArtistSchema;
 
@@ -37,27 +35,10 @@ public class ArtistService {
     private CookieConfig securityConfig;
 
     @Autowired
-    private JWTConfig jwtConfig;
+    private TokenService jwtConfig;
 
     private static final Logger log = Logger.getLogger(ArtistService.class.getName());
 
-
-    @SneakyThrows
-    public CreateResponseDTO createArtist(CreateRequestDTO artist, HttpServletResponse response){
-                ArtistSchema artistCreate = new ArtistSchema();
-                
-                artist.setPassword(encoder.encode(artist.getPassword()));
-                artistCreate.setCreatedAt(new Date(System.currentTimeMillis()));
-                artistCreate.setPassword(artist.getPassword());
-                artistCreate.setRole("artist");
-                artistCreate.setEmail(artist.getEmail());
-                artistCreate.setPhone(artist.getPhone());
-                artistCreate.setName(artist.getName());
-                String token = jwtConfig.generateToken(artistCreate.getId());
-                securityConfig.CreateCookies(response, token);
-                repository.save(artistCreate);
-            return new CreateResponseDTO(artist.getName(), artist.getEmail(), artist.getPhone(), artist.getPassword());
-    }
 
     @SneakyThrows
     public List<ArtistSchema> getAllArtist(){
@@ -134,7 +115,7 @@ public class ArtistService {
             if (token == "null") {
                 return ResponseEntity.badRequest().body("Erro ao deletar artista: token não encontrado.");
             }
-            if (jwtConfig.isTokenValid(token) == true) {
+            if (jwtConfig.isTokenValid(token) == true ) {
                 String tokenJWT = jwtConfig.extractUserId(token);
                 repository.deleteById(tokenJWT);
                 return ResponseEntity.ok().body("Artista deletado com sucesso!!!");
@@ -144,24 +125,5 @@ public class ArtistService {
             return ResponseEntity.badRequest().body("Erro ao deletar o artista " + e.getMessage());
         }
     }
-
-    @SneakyThrows
-    public boolean loginArtist(String email, String pass, HttpServletResponse response){
-        try {
-            ArtistSchema artist = repository.findByEmail(email).get();
-            if(encoder.matches(pass, artist.getPassword())){
-                String token = jwtConfig.generateToken(artist.getId());
-                securityConfig.CreateCookies(response, token);
-                System.out.println("Login realizado com sucesso!");
-                return true;
-            }else{
-                System.err.println("Erro ao realizar login: senha incorreta.");
-                return false;
-            }
-        } catch (Exception e) {
-            return false;
-        }
-    }
-
 
 }
