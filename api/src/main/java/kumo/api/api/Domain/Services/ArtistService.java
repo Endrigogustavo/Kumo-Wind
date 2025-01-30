@@ -13,7 +13,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import io.jsonwebtoken.JwtException;
-import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import kumo.api.api.Application.Configs.Security.CookieConfig;
 import kumo.api.api.Application.Configs.Security.TokenService;
@@ -26,12 +25,6 @@ public class ArtistService {
 
     @Autowired
     private UserRepository repository;
-
-    @Autowired
-    private PasswordEncoder encoder;
-
-    @Autowired
-    private CookieConfig securityConfig;
 
     @Autowired
     private TokenService jwtConfig;

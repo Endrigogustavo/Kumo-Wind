@@ -12,6 +12,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+import kumo.api.api.Domain.Exceptions.CustomAccessDeniedHandler;
+import kumo.api.api.Domain.Exceptions.ExceptionController;
+
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.http.SessionCreationPolicy;
 
@@ -21,6 +24,7 @@ public class SecurityConfig {
 
     @Autowired
     private CustomUserDetailsService userDetailsService;
+
 
     @Autowired
     SecurityFilter securityFilter;
@@ -43,7 +47,10 @@ public class SecurityConfig {
                         .requestMatchers("/art/**").authenticated()
                         .requestMatchers("/admin/**").hasRole("Admin")
                         .anyRequest().authenticated())
-                .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class);
+                    .exceptionHandling(exception -> exception
+                    .accessDeniedHandler(new CustomAccessDeniedHandler())
+                    )
+                    .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
 

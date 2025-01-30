@@ -18,8 +18,10 @@ import java.util.Date;
 
 @Service
 public class TokenService {
+    
     @Value("${api.security.token.secret}")
     private String secret;
+
     public String generateToken(ArtistSchema user){
         try {
             Algorithm algorithm = Algorithm.HMAC256(secret);
