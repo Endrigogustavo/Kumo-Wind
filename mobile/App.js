@@ -37,13 +37,7 @@ export default function App() {
 
           <Stack.Screen name="User" component={UserHome} options={{
             title: '',  
-            headerStyle: {
-              backgroundColor: '#312C50',  
-            },
-            headerTintColor: '#fff', 
-            headerTitleStyle: {
-              fontWeight: 'bold',  
-            },
+            headerShown: false,
           }} />
       </Stack.Navigator>
     </NavigationContainer>
