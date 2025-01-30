@@ -4,31 +4,21 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
 import kumo.api.api.Domain.Entity.ArtistSchema;
 import kumo.api.api.Repository.UserRepository;
 
-@Service
+import java.util.ArrayList;
+
+@Component
 public class CustomUserDetailsService implements UserDetailsService {
-
     @Autowired
-    private final UserRepository userRepository;
-
-    public CustomUserDetailsService(UserRepository userRepository) {
-        this.userRepository = userRepository;
-    }
-
+    private UserRepository repository;
     @Override
-    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        ArtistSchema user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new UsernameNotFoundException("Usuário não encontrado: " + email));
-
-        return org.springframework.security.core.userdetails.User
-                .withUsername(user.getEmail())
-                .password(user.getPassword())
-                .authorities(user.getRole().strip())
-                .build();
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        ArtistSchema user = this.repository.findByEmail(username).orElseThrow(() -> new UsernameNotFoundException("User not found"));
+        return new org.springframework.security.core.userdetails.User(user.getEmail(), user.getPassword(), new ArrayList<>());
     }
 }
 
