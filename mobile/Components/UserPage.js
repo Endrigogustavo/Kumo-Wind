@@ -136,7 +136,7 @@ const styles = StyleSheet.create({
   categories: {
     padding: 5,
     backgroundColor: "#312C50",
-    marginTop: 30,
+    marginTop: 10,
   },
   categoriesScroll: {
     marginTop: 10,
@@ -173,8 +173,10 @@ const styles = StyleSheet.create({
     marginRight: 10,
   },
   options: {
-    padding: 15,
+    padding: 10,
     backgroundColor: "#312C50",
+    marginTop: -10,
+    margin: 5,
   },
   thumb: {
     borderRadius: 10,
