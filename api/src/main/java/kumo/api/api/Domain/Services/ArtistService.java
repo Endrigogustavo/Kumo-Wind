@@ -16,7 +16,6 @@ import io.jsonwebtoken.JwtException;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import kumo.api.api.Application.Configs.Security.CookieConfig;
-import kumo.api.api.Application.Configs.Security.JWTConfig;
 import kumo.api.api.Application.Configs.Security.TokenService;
 import kumo.api.api.Application.Dto.Request.UpdateUserDTO;
 import kumo.api.api.Application.Dto.Response.UpdateResponseDTO;
