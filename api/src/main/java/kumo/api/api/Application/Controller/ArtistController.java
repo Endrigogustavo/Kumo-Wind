@@ -18,7 +18,6 @@ import jakarta.validation.Valid;
 
 import org.springframework.web.bind.annotation.RequestBody;
 
-import kumo.api.api.Application.Configs.Security.CookieConfig;
 import kumo.api.api.Application.Dto.Request.UpdateUserDTO;
 import kumo.api.api.Application.Dto.Response.UpdateResponseDTO;
 import kumo.api.api.Domain.Entity.ArtistSchema;
@@ -33,10 +32,6 @@ public class ArtistController {
 
     @Autowired
     private ArtistService service;
-
-    @Autowired
-    private CookieConfig security;
-
 
     @GetMapping
     public String getArtist() {
@@ -77,16 +72,6 @@ public class ArtistController {
         }
     }
 
-    @PatchMapping("/updateEmail")
-    public ResponseEntity<?> updateEmail(@RequestBody String Email,
-            @CookieValue(value = "token", defaultValue = "null") String token) {
-        try {
-            return ResponseEntity.ok(service.UpdateEmailArtist(Email, token));
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body("Erro ao atualizar o email: " + e.getMessage());
-        }
-    }
-
     @DeleteMapping("/delete")
     public ResponseEntity<?> deleteArtist(@CookieValue(value = "token", defaultValue = "null") String token) {
         try {
@@ -95,5 +80,4 @@ public class ArtistController {
             return ResponseEntity.badRequest().body("Erro ao deletar artista: " + e.getMessage());
         }
     }
-
 }

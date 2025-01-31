@@ -2,55 +2,30 @@ package kumo.api.api.Domain.Exceptions;
 
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.ResponseStatus;
+
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.ConstraintViolationException;
 
-import java.io.IOException;
 import java.net.BindException;
-import java.util.HashMap;
-import java.util.Map;
 
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.web.access.AccessDeniedHandler;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 
 @RestControllerAdvice
-public class ExceptionController implements AccessDeniedHandler{
-
-    @Override
-    public void handle(HttpServletRequest request, HttpServletResponse response, AccessDeniedException accessDeniedException) throws IOException {
-        response.setStatus(HttpStatus.FORBIDDEN.value());
-        response.setContentType("application/json");
-
-        Map<String, Object> responseBody = new HashMap<>();
-        responseBody.put("status", HttpStatus.FORBIDDEN.value());
-        responseBody.put("error", "Forbidden");
-        responseBody.put("message", "Você não tem permissão para acessar este recurso.");
-        responseBody.put("path", request.getRequestURI());
-
-        ObjectMapper mapper = new ObjectMapper();
-        response.getWriter().write(mapper.writeValueAsString(responseBody));
-    }
-
-    public class ResourceNotFoundException extends RuntimeException {
-        public ResourceNotFoundException(String message) {
-            super(message);
-        }
-    }
+public class GlobalExceptionController {
 
     @ExceptionHandler(AuthenticationException.class)
     public ResponseEntity<String> handleAuthenticationException(AuthenticationException ex) {
         return new ResponseEntity<>("Usuário não autenticado. Token inválido ou ausente.", HttpStatus.UNAUTHORIZED);
+    }
+
+    @ExceptionHandler(SwaggerException.class)
+    public ResponseEntity<String> handleSwaggerException(SwaggerException ex) {
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(AccessDeniedException.class)
@@ -60,6 +35,9 @@ public class ExceptionController implements AccessDeniedHandler{
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<String> handleGeneralException(Exception ex) {
+        if (ex.getMessage() != null && ex.getMessage().contains("springdoc")) {
+            return ResponseEntity.ok().build();
+        }
         return new ResponseEntity<>("Erro interno do servidor: " + ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
@@ -70,11 +48,6 @@ public class ExceptionController implements AccessDeniedHandler{
             errorMessage.append(error.getDefaultMessage()).append(" ");
         });
         return new ResponseEntity<>(errorMessage.toString(), HttpStatus.BAD_REQUEST);
-    }
-
-    @ExceptionHandler(ResourceNotFoundException.class)
-    public ResponseEntity<String> handleResourceNotFoundException(ResourceNotFoundException ex) {
-        return new ResponseEntity<>("Recurso não encontrado: " + ex.getMessage(), HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(BindException.class)
