@@ -15,7 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.AuthenticationException;
 
-@RestControllerAdvice
+
 public class GlobalExceptionController {
 
     @ExceptionHandler(AuthenticationException.class)

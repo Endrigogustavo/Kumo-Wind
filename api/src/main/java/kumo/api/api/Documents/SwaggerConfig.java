@@ -43,10 +43,14 @@ public class SwaggerConfig {
                 .license(new License()
                     .name("Licença - Kumo Wind")
                     .url("https://www.kumowind.com/terms")))
-            .components(new Components()
-                .securitySchemes(Map.of(
-                    "bearerAuth", new SecurityScheme().type(SecurityScheme.Type.HTTP).scheme("bearer").bearerFormat("JWT")
-                )))
-            .security(List.of(new SecurityRequirement().addList("bearerAuth")));
+                .addSecurityItem(new SecurityRequirement().addList("Bearer Authentication"))
+                .components(new io.swagger.v3.oas.models.Components()
+                .addSecuritySchemes("Bearer Authentication",
+                    new SecurityScheme()
+                    .name("Bearer Authentication")
+                    .type(SecurityScheme.Type.HTTP)
+                    .scheme("bearer")
+                    .bearerFormat("JWT"))
+            );
     }
 }
