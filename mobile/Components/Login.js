@@ -9,7 +9,7 @@ export default function LoginScreen({navigation}) {
   return (
     <View style={styles.container}>
       {/* Logo do App */}
-      <Image source={require("../assets/Logo.png")} style={styles.logo} />
+      <Image source={{ uri: 'https://i.ibb.co/jZgs3gKs/Logo.png' }} style={styles.logo} />
 
       {/* Título */}
       <Text style={styles.title}>Bem-vindo ao Kumo Wind</Text>

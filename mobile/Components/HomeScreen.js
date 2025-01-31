@@ -9,7 +9,7 @@ export default function HomeScreen({navigation}) {
   return (
     <View style={styles.container}>
       {/* Logo do App */}
-      <Image source={require("../assets/Logo.png")} style={styles.logo} />
+      <Image source={{ uri: 'https://i.ibb.co/jZgs3gKs/Logo.png' }}  style={styles.logo} />
 
       <TouchableOpacity
         style={styles.customButton}
@@ -19,7 +19,7 @@ export default function HomeScreen({navigation}) {
       </TouchableOpacity>
 
       {/* Imagem ilustrativa */}
-      <Image source={require("../assets/FundoHome.png")} style={styles.image} />
+      <Image source={{ uri: 'https://i.ibb.co/vx2mzP5K/Fundo-Home.png'}} style={styles.image} />
     </View>
   );
 }
