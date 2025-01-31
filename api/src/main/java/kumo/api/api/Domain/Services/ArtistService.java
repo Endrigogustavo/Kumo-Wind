@@ -51,6 +51,7 @@ public class ArtistService implements ArtistInterface {
             ArtistSchema artistToUpdate = repository.findById(tokenId).orElseThrow(() -> new IllegalArgumentException("Artista não encontrado"));
            
             if (artist.getName() != null) artistToUpdate.setName(artist.getName());
+            if (artist.getEmail() != null) artistToUpdate.setEmail(artist.getEmail());
             if (artist.getPhone() != null) artistToUpdate.setPhone(artist.getPhone());
 
             ArtistSchema updated = repository.save(artistToUpdate);
