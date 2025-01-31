@@ -15,9 +15,10 @@ import kumo.api.api.Application.Configs.Security.TokenService;
 import kumo.api.api.Application.Dto.Request.UpdateUserDTO;
 import kumo.api.api.Application.Dto.Response.UpdateResponseDTO;
 import kumo.api.api.Domain.Entity.ArtistSchema;
+import kumo.api.api.Domain.Interfaces.ArtistInterface;
 
 @Service
-public class ArtistService {
+public class ArtistService implements ArtistInterface {
 
     @Autowired
     private UserRepository repository;
@@ -47,7 +48,7 @@ public class ArtistService {
             if(artistEmailExist.isPresent()) return null;
 
             String tokenId = jwtConfig.extractUserId(token);
-            ArtistSchema artistToUpdate = repository.findById(tokenId).orElseThrow(() -> new IllegalArgumentException("Artista não encontrado"));;
+            ArtistSchema artistToUpdate = repository.findById(tokenId).orElseThrow(() -> new IllegalArgumentException("Artista não encontrado"));
            
             if (artist.getName() != null) artistToUpdate.setName(artist.getName());
             if (artist.getPhone() != null) artistToUpdate.setPhone(artist.getPhone());

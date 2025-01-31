@@ -54,7 +54,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.POST, "/auth/login").permitAll()
                         .requestMatchers(HttpMethod.GET, "/artists/allArtists").permitAll()
                         .requestMatchers(DOCUMENTATION_OPENAPI).permitAll()
-                        .requestMatchers("/art/**").authenticated()
+                        .requestMatchers("/art/**").permitAll()
                         .requestMatchers("/admin/**").hasRole("Admin")
                         .anyRequest().authenticated())
                     .exceptionHandling(exception -> exception.authenticationEntryPoint(customAuthenticationEntryPoint)
