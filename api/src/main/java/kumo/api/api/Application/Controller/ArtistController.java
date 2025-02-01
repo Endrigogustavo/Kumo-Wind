@@ -30,7 +30,7 @@ import kumo.api.api.Domain.Entity.ArtistSchema;
 import kumo.api.api.Domain.Services.ArtistService;
 
 @RestController
-@RequestMapping("/v1/artists")
+@RequestMapping("/artists")
 @SecurityRequirement(name = "Bearer Authentication")
 public class ArtistController {
 

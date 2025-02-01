@@ -14,7 +14,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-@Document(collection = "artistsTest")
+@Document(collection = "artist")
 public class ArtistSchema {
     @Id
     private String id;
