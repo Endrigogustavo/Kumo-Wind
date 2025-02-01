@@ -4,8 +4,8 @@ services:
     plan: free
     region: oregon
     env: docker
-    repo: https://github.com/Endrigogustavo/Kumo-Wind/tree/render.git
-    branch: main
+    repo: https://github.com/Endrigogustavo/Kumo-Wind
+    branch: render  
     buildCommand: mvn clean package
     envVars:
       - key: DB_URL
