@@ -4,12 +4,21 @@ services:
     plan: free
     region: oregon
     env: docker
-    repo: https://github.com/Endrigogustavo/Kumo-Wind/tree/render
+    repo: https://github.com/Endrigogustavo/Kumo-Wind/tree/render.git
     branch: main
     buildCommand: mvn clean package
     startCommand: java -jar target/api-0.0.1-SNAPSHOT.jar
-    envVars:
-      - key: SPRING_PROFILES_ACTIVE
-        value: production
-      - key: DATABASE_URL
+     envVars:
+      - key: DB_URL
+        value: "mongodb+srv://endrigogustavo2006:Uq3Ui9jvsCQArVW2@cluster0.pz9y0.mongodb.net/KumoWind?retryWrites=true&w=majority&appName=Cluster0"
+        sync: false
+      - key: JWT_SECURITY_KEY
+        value: "Key_Security"
+      - key: CLOUD_NAME_CLOUDINARY
+        value: "dbpdvup0o"
+      - key: API_KEY_CLOUDINARY
+        value: "329158128874677"
+        sync: false
+      - key: API_SECRET_CLOUDINARY
+        value: "zctfpLGiuwYHscdwAZeep4yxxAw"
         sync: false
