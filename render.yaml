@@ -3,6 +3,7 @@ services:
     type: web
     plan: free
     region: oregon
+    env: docker
     repo: https://github.com/Endrigogustavo/Kumo-Wind/tree/render
     branch: main
     buildCommand: mvn clean package
