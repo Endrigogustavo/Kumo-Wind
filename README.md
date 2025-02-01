@@ -19,7 +19,7 @@
 - **Backend**: Spring Boot (Java).
 - **Frontend**: React com Tailwind CSS para um design moderno e responsivo.
 - **Banco de Dados**: MongoDB.
-= **Mobile**: React Native.
+- **Mobile**: React Native.
 
 ## Imagens do Projeto
 
