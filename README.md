@@ -1,6 +1,6 @@
-<center>
+
 # Kumo Wind
-</center>
+
 
 ## Descrição
 <center>
