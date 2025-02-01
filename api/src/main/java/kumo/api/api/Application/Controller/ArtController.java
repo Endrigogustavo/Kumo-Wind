@@ -1,5 +1,7 @@
 package kumo.api.api.Application.Controller;
 
+import java.io.IOException;
+
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -50,4 +52,15 @@ public class ArtController {
     public List<ArtSchema> getArtByArtist(@CookieValue(value = "token", defaultValue = "null") String token) {
         return artService.getArtByArtist(token);
     }
+
+    @PostMapping("/upload")
+    public ResponseEntity<String> uploadImage(@RequestParam("file") MultipartFile file) {
+        try {
+            String imageUrl = artService.uploadImage(file);
+            return ResponseEntity.ok(imageUrl);
+        } catch (IOException e) {
+            return ResponseEntity.status(500).body("Erro ao fazer upload da imagem.");
+        }
+    }
+
 }
