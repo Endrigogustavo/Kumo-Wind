@@ -1,7 +1,6 @@
 services:
   - name: kumowind-api
     type: web
-    env: docker
     plan: free
     region: oregon
     repo: https://github.com/Endrigogustavo/Kumo-Wind/tree/render
