@@ -63,4 +63,13 @@ public class ArtService {
         String id = tokenService.extractUserId(idArtist);
         return artRepository.findByidArtist(id);
     }
+
+    public String deleteArt(String id) throws Exception{
+        artRepository.deleteById(id);
+        return "Art deletado com sucesso";
+    }
+
+    public void updateArt(){
+        
+    }
 }
