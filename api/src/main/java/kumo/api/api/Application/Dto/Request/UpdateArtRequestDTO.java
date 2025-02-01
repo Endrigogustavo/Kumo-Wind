@@ -1,5 +1,5 @@
 package kumo.api.api.Application.Dto.Request;
 
-public class UpdateArtRequestDTO {
+public record UpdateArtRequestDTO(String id, String title, String description, String filePath) {
     
 }

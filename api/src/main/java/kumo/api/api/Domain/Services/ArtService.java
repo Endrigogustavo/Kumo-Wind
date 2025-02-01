@@ -5,7 +5,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,6 +14,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.cloudinary.Cloudinary;
 
 import kumo.api.api.Application.Configs.Security.TokenService;
+import kumo.api.api.Application.Dto.Request.UpdateArtRequestDTO;
 import kumo.api.api.Domain.Entity.ArtSchema;
 import kumo.api.api.Domain.Entity.ArtistSchema;
 import kumo.api.api.Repository.ArtRepository;
@@ -69,7 +70,12 @@ public class ArtService {
         return "Art deletado com sucesso";
     }
 
-    public void updateArt(){
-        
+    public ArtSchema updateArt(UpdateArtRequestDTO art){
+        ArtSchema newArt = artRepository.findById(art.id()).orElseThrow(() -> new IllegalArgumentException("Arte não encontrada"));
+
+        if(art.description() != null) newArt.setDescription(art.description());
+        if(art.title() != null) newArt.setTitle(art.title());
+
+        return artRepository.save(newArt);
     }
 }
