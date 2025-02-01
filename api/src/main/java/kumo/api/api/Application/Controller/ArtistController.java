@@ -2,6 +2,7 @@ package kumo.api.api.Application.Controller;
 
 import kumo.api.api.Repository.UserRepository;
 
+import org.springdoc.api.ErrorMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CookieValue;
@@ -14,18 +15,23 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import org.springframework.web.bind.annotation.RestController;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 
 import org.springframework.web.bind.annotation.RequestBody;
 
-import kumo.api.api.Application.Configs.Security.CookieConfig;
 import kumo.api.api.Application.Dto.Request.UpdateUserDTO;
 import kumo.api.api.Application.Dto.Response.UpdateResponseDTO;
 import kumo.api.api.Domain.Entity.ArtistSchema;
 import kumo.api.api.Domain.Services.ArtistService;
 
 @RestController
-@RequestMapping("/artists")
+@RequestMapping("/v1/artists")
+@SecurityRequirement(name = "Bearer Authentication")
 public class ArtistController {
 
     @Autowired
@@ -33,10 +39,6 @@ public class ArtistController {
 
     @Autowired
     private ArtistService service;
-
-    @Autowired
-    private CookieConfig security;
-
 
     @GetMapping
     public String getArtist() {
@@ -77,16 +79,6 @@ public class ArtistController {
         }
     }
 
-    @PatchMapping("/updateEmail")
-    public ResponseEntity<?> updateEmail(@RequestBody String Email,
-            @CookieValue(value = "token", defaultValue = "null") String token) {
-        try {
-            return ResponseEntity.ok(service.UpdateEmailArtist(Email, token));
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body("Erro ao atualizar o email: " + e.getMessage());
-        }
-    }
-
     @DeleteMapping("/delete")
     public ResponseEntity<?> deleteArtist(@CookieValue(value = "token", defaultValue = "null") String token) {
         try {
@@ -95,5 +87,4 @@ public class ArtistController {
             return ResponseEntity.badRequest().body("Erro ao deletar artista: " + e.getMessage());
         }
     }
-
 }
