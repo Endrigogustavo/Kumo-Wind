@@ -1,11 +1,11 @@
 
 # Kumo Wind
-
+<center>
+<img src="https://github.com/Endrigogustavo/Kumo-Wind/blob/v2/mobile/assets/Logo.png" alt="Descrição" width="300">
+</center>
 
 ## Descrição
-<center>
-<img src="https://github.com/Endrigogustavo/Kumo-Wind/blob/v2/mobile/assets/Logo.png" alt="Descrição" width="400">
-</center>
+
 
 **Kumo Wind** é um projeto inovador de galeria de arte online que combina a elegância das nuvens (“Kumo”, em japonês) com a fluidez do vento (“Wind”, em inglês). Este projeto permite que artistas armazenem suas obras em um espaço digital belo e intuitivo, trazendo inspiração e criatividade para todos.
 
