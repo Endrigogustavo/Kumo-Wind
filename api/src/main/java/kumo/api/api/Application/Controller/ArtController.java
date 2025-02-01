@@ -31,7 +31,7 @@ import kumo.api.api.Domain.Services.ArtService;
 import lombok.RequiredArgsConstructor;
 
 @RestController
-@RequestMapping("/v1/art")
+@RequestMapping("/art")
 @RequiredArgsConstructor
 public class ArtController {
 
