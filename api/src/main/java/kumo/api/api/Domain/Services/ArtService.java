@@ -78,4 +78,11 @@ public class ArtService {
 
         return artRepository.save(newArt);
     }
+
+    public ArtSchema updateArtIMG(MultipartFile file, String id) throws IOException{
+        ArtSchema newArt = artRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Arte não encontrada"));
+        String artPath = uploadImage(file);
+        if(!artPath.isEmpty()) newArt.setFilePath(artPath);
+        return artRepository.save(newArt);
+    }
 }

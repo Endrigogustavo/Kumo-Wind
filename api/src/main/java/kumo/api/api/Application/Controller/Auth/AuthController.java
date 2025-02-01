@@ -15,7 +15,7 @@ import kumo.api.api.Application.Dto.Response.LoginAndCreateReponseDTO;
 import kumo.api.api.Domain.Services.Auth.AuthArtistService;
 
 @RestController
-@RequestMapping("/auth")
+@RequestMapping("/v1/auth")
 @RequiredArgsConstructor
 public class AuthController {
     private final AuthArtistService auth;
