@@ -21,7 +21,8 @@ public class AuthController {
     private final AuthArtistService auth;
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody @Valid LoginRequestDTO body, HttpServletResponse response) {
+    public ResponseEntity<?> login(@RequestBody @Valid LoginRequestDTO body, HttpServletResponse response)
+    {
         try {
             String token = auth.loginArtist(body, response);
             return ResponseEntity.ok(new LoginAndCreateReponseDTO(body.email(), token));
