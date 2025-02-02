@@ -2,6 +2,7 @@ package kumo.api.api.Application.Controller.Auth;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -37,6 +38,16 @@ public class AuthController {
             return ResponseEntity.ok(new LoginAndCreateReponseDTO(body.getName(), token));
         } catch (Exception e) {
             return ResponseEntity.badRequest().build();
+        }
+    }
+
+    @PostMapping("/logout")
+    public ResponseEntity<String> logout(@CookieValue(name = "token", defaultValue="null") String token, HttpServletResponse response){
+        try {
+            auth.logoutArtist(token, response);
+            return ResponseEntity.ok().body("Usuario deslogado com sucesso!!!");
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Não foi possivel fazer logout: " + e.getMessage());
         }
     }
 }

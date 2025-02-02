@@ -40,7 +40,6 @@ public class ArtistService implements ArtistInterface {
             Optional<ArtistSchema> optionalArtist = repository.findById(tokenId);
             return optionalArtist.orElse(null);
     }
-
  
     @SneakyThrows
     public UpdateResponseDTO updateArtist(@Valid UpdateUserDTO artist, String token){
