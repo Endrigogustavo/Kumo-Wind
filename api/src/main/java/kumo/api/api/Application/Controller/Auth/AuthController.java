@@ -2,7 +2,6 @@ package kumo.api.api.Application.Controller.Auth;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -41,8 +40,4 @@ public class AuthController {
         }
     }
 
-    @PostMapping("/logout")
-    public ResponseEntity<?> logout(@CookieValue(value = "token", defaultValue = "null") @Valid String token){
-        return null;
-    }
 }

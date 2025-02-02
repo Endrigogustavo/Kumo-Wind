@@ -2,11 +2,8 @@ package kumo.api.api.Application.Controller;
 
 import java.io.IOException;
 
-import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -21,10 +18,8 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import io.swagger.annotations.ApiOperation;
-import kumo.api.api.Application.Dto.Request.CreateArtRequestDTO;
 import kumo.api.api.Application.Dto.Request.UpdateArtRequestDTO;
 import kumo.api.api.Application.Dto.Response.CreateArtResponseDTO;
-import kumo.api.api.Application.Dto.Response.GetArtsArtistsResponseDTO;
 import kumo.api.api.Application.Dto.Response.UpdateArtResponseDTO;
 import kumo.api.api.Domain.Entity.ArtSchema;
 import kumo.api.api.Domain.Services.ArtService;
