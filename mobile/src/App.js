@@ -1,8 +1,8 @@
-import { StatusBar } from 'expo-status-bar';
 import { StyleSheet } from 'react-native';
-import Home from './Components/HomeScreen';
-import Login from './Components/Login';
-import UserHome from './Components/UserPage';
+import Home from './Screens/HomeScreen';
+import Login from './Screens/Login';
+import UserHome from './Screens/ArtGalery';
+import CreateArt from './Screens/CreateArt';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
@@ -23,40 +23,40 @@ function BottomTabs() {
             iconName = focused ? 'person' : 'person-outline';
           } else if (route.name === 'AnotherScreen') {
             iconName = focused ? 'grid' : 'grid-outline';
-          }else if (route.name === 'teste') {
+          } else if (route.name === 'teste') {
             iconName = focused ? 'grid' : 'grid-outline';
           }
 
           return <Ionicons name={iconName} size={size} color={color} />;
         },
         tabBarStyle: {
-          backgroundColor: '#312C50', 
+          backgroundColor: '#312C50',
           borderTopWidth: 2,
-          borderColor: '#5D4B8E', 
+          borderColor: '#5D4B8E',
         },
         tabBarActiveTintColor: '#5D4B8E',
         tabBarInactiveTintColor: '#5D4B8E',
       })}
     >
-        <Tab.Screen 
-        name="UserHome" 
-        component={UserHome} 
+      <Tab.Screen
+        name="UserHome"
+        component={UserHome}
         options={{
-          headerShown: false, 
+          headerShown: false,
         }}
       />
-      <Tab.Screen 
-        name="AnotherScreen" 
-        component={UserHome} 
+      <Tab.Screen
+        name="AnotherScreen"
+        component={Login}
         options={{
-          headerShown: false, 
+          headerShown: false,
         }}
       />
-            <Tab.Screen 
-        name="teste" 
-        component={UserHome} 
+      <Tab.Screen
+        name="Create"
+        component={CreateArt}
         options={{
-          headerShown: false, 
+          headerShown: false,
         }}
       />
     </Tab.Navigator>
@@ -69,27 +69,27 @@ export default function App() {
       <Stack.Navigator>
         {/* Tela Home - Sem barra de navegação inferior e sem topbar */}
         <Stack.Screen name="Home" component={Home} options={{
-            title: '',  
-            headerStyle: {
-              backgroundColor: '#312C50',  
-            },
-            headerTintColor: '#312C50', 
-            headerTitleStyle: {
-              fontWeight: 'bold',  
-            },
-          }} />
+          title: '',
+          headerStyle: {
+            backgroundColor: '#312C50',
+          },
+          headerTintColor: '#312C50',
+          headerTitleStyle: {
+            fontWeight: 'bold',
+          },
+        }} />
 
         {/* Tela Login - Sem barra de navegação inferior */}
         <Stack.Screen name="Login" component={Login} options={{
-            title: 'Login',  
-            headerStyle: {
-              backgroundColor: '#312C50',  
-            },
-            headerTintColor: '#fff', 
-            headerTitleStyle: {
-              fontWeight: 'bold',  
-            },
-          }} />
+          title: 'Login',
+          headerStyle: {
+            backgroundColor: '#312C50',
+          },
+          headerTintColor: '#fff',
+          headerTitleStyle: {
+            fontWeight: 'bold',
+          },
+        }} />
 
         {/* Tela UserHome - Com barra de navegação inferior e sem topbar */}
         <Stack.Screen
@@ -97,7 +97,16 @@ export default function App() {
           component={BottomTabs}
           options={{
             title: '',
-            headerShown: false,  // Remover a topbar
+            headerShown: false,  
+          }}
+        />
+
+        <Stack.Screen
+          name="Create"
+          component={BottomTabs}
+          options={{
+            title: '',
+            headerShown: false, 
           }}
 
         />

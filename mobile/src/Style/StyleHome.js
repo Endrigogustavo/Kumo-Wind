@@ -1,30 +1,7 @@
-import React from "react";
+import { StyleSheet } from "react-native";
 import { PixelRatio } from "react-native";
-import { View, StyleSheet, Image , TouchableOpacity} from "react-native";
-import { Card, Text, Button } from "react-native-paper";
-import { NavigationContainer } from '@react-navigation/native';
-import { createStackNavigator } from '@react-navigation/stack';
 
-export default function HomeScreen({navigation}) {
-  return (
-    <View style={styles.container}>
-      {/* Logo do App */}
-      <Image source={{ uri: 'https://i.ibb.co/jZgs3gKs/Logo.png' }}  style={styles.logo} />
-
-      <TouchableOpacity
-        style={styles.customButton}
-        onPress={() => navigation.navigate('Login')}
-      >
-        <Text style={styles.buttonText}>Sing In</Text>
-      </TouchableOpacity>
-
-      {/* Imagem ilustrativa */}
-      <Image source={{ uri: 'https://i.ibb.co/vx2mzP5K/Fundo-Home.png'}} style={styles.image} />
-    </View>
-  );
-}
-
-const styles = StyleSheet.create({
+export default StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: "center",
@@ -73,4 +50,4 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     textAlign: "center",
   },
-});
+})
