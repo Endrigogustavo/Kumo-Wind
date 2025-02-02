@@ -1,10 +1,41 @@
 import React, { useState } from "react";
-import { PixelRatio, View, StyleSheet, Image, TextInput, TouchableOpacity, Text } from "react-native";
+import { PixelRatio, View, StyleSheet, Image, TextInput, TouchableOpacity, Text, Button } from "react-native";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function LoginScreen({navigation}) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState('');
 
+  const handleLogin = async () => {
+    try {
+      const response = await fetch('https://kumowind-api-3ris.onrender.com/auth/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email: email,
+          password: password,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+          console.log('Login bem-sucedido', data);
+          const tokenAuth = "Bearer " + data.token;
+          await AsyncStorage.setItem('userToken', tokenAuth);
+          console.log('Login bem-sucedido', tokenAuth);
+          navigation.navigate('UserHome')
+
+      } else {
+          setError(data.message || 'Erro ao fazer login');
+      }
+    } catch (error) {
+      setError('Erro na requisição: ' + error.message);
+    }
+  };
 
   return (
     <View style={styles.container}>
@@ -35,9 +66,9 @@ export default function LoginScreen({navigation}) {
       />
 
       {/* Botão de Login */}
-      <TouchableOpacity style={styles.customButton} onPress={() => navigation.navigate('User')}>
-        <Text style={styles.buttonText}>Log In</Text>
-        
+      <TouchableOpacity style={styles.customButton} >
+        <Button style={styles.buttonText} title="Login" onPress={handleLogin} />
+      {error && <Text>{error}</Text>}
       </TouchableOpacity>
 
     </View>
