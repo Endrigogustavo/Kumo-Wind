@@ -19,12 +19,12 @@ function BottomTabs() {
         tabBarIcon: ({ focused, color, size }) => {
           let iconName;
 
-          if (route.name === 'UserHome') {
+          if (route.name === 'Arts') {
+            iconName = focused ? 'cloud' : 'image-outline';
+          } else if (route.name === 'Create') {
+            iconName = focused ? 'add-circle-outline' : 'add';
+          } else if (route.name === 'User') {
             iconName = focused ? 'person' : 'person-outline';
-          } else if (route.name === 'AnotherScreen') {
-            iconName = focused ? 'grid' : 'grid-outline';
-          } else if (route.name === 'teste') {
-            iconName = focused ? 'grid' : 'grid-outline';
           }
 
           return <Ionicons name={iconName} size={size} color={color} />;
@@ -39,26 +39,27 @@ function BottomTabs() {
       })}
     >
       <Tab.Screen
-        name="UserHome"
+        name="Arts"
         component={UserHome}
         options={{
           headerShown: false,
         }}
       />
-      <Tab.Screen
-        name="AnotherScreen"
-        component={Login}
-        options={{
-          headerShown: false,
-        }}
-      />
-      <Tab.Screen
+        <Tab.Screen
         name="Create"
         component={CreateArt}
         options={{
           headerShown: false,
         }}
       />
+      <Tab.Screen
+        name="User"
+        component={Login}
+        options={{
+          headerShown: false,
+        }}
+      />
+ 
     </Tab.Navigator>
   );
 }

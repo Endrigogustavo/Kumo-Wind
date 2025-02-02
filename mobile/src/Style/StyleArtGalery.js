@@ -46,7 +46,6 @@ export default StyleSheet.create({
       backgroundColor: "#5D4B8E",
       borderRadius: 10,
       marginRight: 10,
-      
     },
   
     categoryText: {
@@ -56,6 +55,7 @@ export default StyleSheet.create({
       borderRadius: 10,
       marginRight: 10,
       color: '#FFF',
+      fontWeight: 'bold',
       fontSize: 15,
     },
     imgcat: {
@@ -88,12 +88,17 @@ export default StyleSheet.create({
     },
     thumb: {
       borderRadius: 10,
-      marginVertical: 7,
+      marginVertical: 10,
       alignSelf: 'center',
-      width: 185,
+      width: 175,
       height: 270,
-      borderWidth: 2,
-      borderColor: "#5D4B8E",
+    },
+    categoryItemArt: {
+      paddingVertical: 3,
+      paddingHorizontal: 5,
+      backgroundColor: "#5D4B8E",
+      borderRadius: 10,
+      marginTop: 15,
     },
   });
   

@@ -17,28 +17,25 @@ const Profile = () => {
   const fetchData = async () => {
     try {
       const token = await AsyncStorage.getItem('userToken');
-      console.log(token)
 
       const response = await axios.get('https://kumowind-api-3ris.onrender.com/art/getArts/', {
         headers: {
           'Authorization': token,
         },
       });
-  
+
       if (!response.status === 200) {
         const errorText = await response.text();
         throw new Error(`Erro na requisição: ${errorText}`);
       }
-  
-      console.log('Dados recebidos:', response.data);
       setArts(response.data);
-  
+
     } catch (error) {
       setError(error.message || 'Erro desconhecido');
       console.error('Erro:', error);
     }
   };
-  
+
   useEffect(() => {
     fetchData();
   }, []);
@@ -119,12 +116,19 @@ const Profile = () => {
                 {/* Verificação se 'arts' tem dados antes de mapear */}
                 {arts && arts.length > 0 ? (
                   arts.map((art, index) => (
-                    <Image
-                      source={{ uri: art.filePath }}
-                      key={`art-${index}`}
-                      resizeMode="cover"
-                      style={styles.thumb}
-                    />
+                    <Block key={index} style={styles.categoryItemArt}>
+                      <Image
+                        source={{ uri: art.filePath }}
+                        key={`art-${index}`}
+                        resizeMode="cover"
+                        style={styles.thumb}
+                      />
+
+                      <Text style={styles.categoryText}>
+                        {art.title}
+                      </Text>
+                    </Block>
+
                   ))
                 ) : (
                   <Text style={{ color: '#FFF', textAlign: 'center' }}>Nenhuma arte disponível.</Text>
