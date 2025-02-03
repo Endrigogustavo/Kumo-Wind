@@ -1,7 +1,7 @@
 # Kumo Wind
 
 <p align="center">
-  <img src="https://github.com/Endrigogustavo/Kumo-Wind/blob/v2/mobile/assets/Logo.png" alt="Descrição" width="300">
+  <img src="https://github.com/Endrigogustavo/Kumo-Wind/blob/main/mobile/src/assets/Logo.png" alt="Descrição" width="300">
 </p>
 
 ## Descrição
