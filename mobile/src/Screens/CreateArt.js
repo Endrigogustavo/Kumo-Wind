@@ -88,7 +88,7 @@ export default function CreateArt({ navigation }) {
             {image && <Image source={{ uri: image }} style={{ borderRadius: 15, width: 200, height: 200, marginVertical: 10 }} />}
 
             <TouchableOpacity style={styles.customButton} >
-                <Button style={styles.buttonText} title={uploading ? "Enviando..." : "Enviar Imagem"} onPress={Create} disabled={uploading} />
+                <Button style={styles.buttonText} title={uploading ? "Enviando..." : "Enviar Imagem"}  color={'#FFF'} onPress={Create} disabled={uploading} />
             </TouchableOpacity>
 
 

@@ -11,7 +11,7 @@ export default StyleSheet.create({
     logo: {
       width: 150 * PixelRatio.get(),
       height: 150 * PixelRatio.get(),
-      marginTop: -300,
+      marginTop: -350,
       marginBottom: 20,
       resizeMode: "contain",
       position: "relative",
@@ -48,12 +48,12 @@ export default StyleSheet.create({
     },
     customButton: {
       backgroundColor: "#594F80",
-      paddingVertical: 15,
+      paddingVertical: 10,
       paddingHorizontal: 30,
-      borderRadius: 13,
+      borderRadius: 20,
       position: "absolute",
       zIndex: 10,
-      bottom: 150,
+      bottom: 200,
       width: 150,
       borderColor: "#312C50",
       borderWidth: 5,
@@ -64,7 +64,7 @@ export default StyleSheet.create({
       fontSize: 18,
       fontWeight: "bold",
       textAlign: "center",
-  
+      zIndex:10,
     },
   });
   

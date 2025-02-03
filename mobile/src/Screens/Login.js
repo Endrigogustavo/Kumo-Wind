@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { View, Image, TextInput, TouchableOpacity, Text, Button } from "react-native";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from "axios";
@@ -8,9 +8,11 @@ export default function LoginScreen({ navigation }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
 
   const handleLogin = async (email, password) => {
     try {
+      setLoading(true);
       const loginData = { email: String(email), password: String(password) };
 
       const response = await axios.post(
@@ -21,13 +23,17 @@ export default function LoginScreen({ navigation }) {
 
       if (response.status === 200) {
         const tokenAuth = "Bearer " + response.data.token;
-        await AsyncStorage.setItem('userToken', tokenAuth);
-        navigation.navigate('UserHome')
+        AsyncStorage.setItem('userToken', tokenAuth).then(() => {
+          navigation.navigate('UserHome');
+        });
       } else {
         setError(response.data.message || 'Erro ao fazer login');
       }
     } catch (error) {
       setError('Erro na requisição: ' + error.message);
+    }
+    finally {
+      setLoading(false);
     }
   };
 
@@ -56,7 +62,7 @@ export default function LoginScreen({ navigation }) {
       />
 
       <TouchableOpacity style={styles.customButton} >
-        <Button style={styles.buttonText} title="Login" onPress={() => handleLogin(email, password)} />
+        <Button title={loading ? "Carregando..." : "Login"} disabled={loading} color={'#FFF'} onPress={() => handleLogin(email, password)} />
         {error && <Text>{error}</Text>}
       </TouchableOpacity>
 

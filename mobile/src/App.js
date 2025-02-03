@@ -68,31 +68,19 @@ export default function App() {
   return (
     <NavigationContainer>
       <Stack.Navigator>
-        {/* Tela Home - Sem barra de navegação inferior e sem topbar */}
         <Stack.Screen name="Home" component={Home} options={{
           title: '',
-          headerStyle: {
-            backgroundColor: '#312C50',
-          },
-          headerTintColor: '#312C50',
-          headerTitleStyle: {
-            fontWeight: 'bold',
-          },
+          headerShown: false,
+         
         }} />
 
-        {/* Tela Login - Sem barra de navegação inferior */}
         <Stack.Screen name="Login" component={Login} options={{
-          title: 'Login',
-          headerStyle: {
-            backgroundColor: '#312C50',
-          },
-          headerTintColor: '#fff',
-          headerTitleStyle: {
-            fontWeight: 'bold',
-          },
+           
+            title: '',
+            headerShown: false,  
+        
         }} />
 
-        {/* Tela UserHome - Com barra de navegação inferior e sem topbar */}
         <Stack.Screen
           name="UserHome"
           component={BottomTabs}
