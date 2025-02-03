@@ -24,6 +24,7 @@ import kumo.api.api.Application.Dto.Response.UpdateArtResponseDTO;
 import kumo.api.api.Domain.Entity.ArtSchema;
 import kumo.api.api.Domain.Services.ArtService;
 import lombok.RequiredArgsConstructor;
+import net.bytebuddy.asm.Advice.Return;
 
 @RestController
 @RequestMapping("/art")
@@ -78,5 +79,10 @@ public class ArtController {
     @PatchMapping("/updateImg/{imageId}")
     public ResponseEntity<?> updateImgArt(@PathVariable String id, MultipartFile file) throws Exception{
         return ResponseEntity.ok().body(artService.updateArtIMG(file, id));
+    }
+
+    @GetMapping("/getAllArts")
+    public ResponseEntity<?> getAllArts(){
+        return ResponseEntity.ok().body(null);
     }
 }

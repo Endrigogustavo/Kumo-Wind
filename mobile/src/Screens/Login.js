@@ -3,12 +3,15 @@ import { View, Image, TextInput, TouchableOpacity, Text, Button } from "react-na
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from "axios";
 import styles from '../Style/StyleLogin'
+import { useNavigation } from '@react-navigation/native';
 
-export default function LoginScreen({ navigation }) {
+export default function LoginScreen() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+
+  const navigation = useNavigation();
 
   const handleLogin = async (email, password) => {
     try {
@@ -66,6 +69,8 @@ export default function LoginScreen({ navigation }) {
         {error && <Text>{error}</Text>}
       </TouchableOpacity>
 
+      <Button title={"Register"}  color={'#FFF'}  onPress={() => navigation.navigate('Register')} />
+      
     </View>
   );
 }

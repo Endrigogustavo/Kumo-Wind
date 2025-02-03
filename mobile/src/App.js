@@ -3,6 +3,8 @@ import Home from './Screens/HomeScreen';
 import Login from './Screens/Login';
 import UserHome from './Screens/ArtGalery';
 import CreateArt from './Screens/CreateArt';
+import Register from './Screens/RegisterUser';
+import MyArts from './Screens/MyArt';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
@@ -13,6 +15,7 @@ const Tab = createBottomTabNavigator();
 
 // Barra de navegação inferior
 function BottomTabs() {
+  
   return (
     <Tab.Navigator
       screenOptions={({ route }) => ({
@@ -45,7 +48,7 @@ function BottomTabs() {
           headerShown: false,
         }}
       />
-        <Tab.Screen
+      <Tab.Screen
         name="Create"
         component={CreateArt}
         options={{
@@ -54,12 +57,12 @@ function BottomTabs() {
       />
       <Tab.Screen
         name="User"
-        component={Login}
+        component={MyArts}
         options={{
           headerShown: false,
         }}
       />
- 
+
     </Tab.Navigator>
   );
 }
@@ -71,14 +74,14 @@ export default function App() {
         <Stack.Screen name="Home" component={Home} options={{
           title: '',
           headerShown: false,
-         
+
         }} />
 
         <Stack.Screen name="Login" component={Login} options={{
-           
-            title: '',
-            headerShown: false,  
-        
+
+          title: '',
+          headerShown: false,
+
         }} />
 
         <Stack.Screen
@@ -86,7 +89,7 @@ export default function App() {
           component={BottomTabs}
           options={{
             title: '',
-            headerShown: false,  
+            headerShown: false,
           }}
         />
 
@@ -95,9 +98,16 @@ export default function App() {
           component={BottomTabs}
           options={{
             title: '',
-            headerShown: false, 
+            headerShown: false,
           }}
+        />
 
+        <Stack.Screen
+          name="Register"
+          component={Register}
+          options={{
+            headerShown: false,
+          }}
         />
       </Stack.Navigator>
     </NavigationContainer>
