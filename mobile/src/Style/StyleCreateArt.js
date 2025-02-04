@@ -39,7 +39,7 @@ export default StyleSheet.create({
       paddingVertical: 12,
       paddingHorizontal: 15,
       borderRadius: 15,
-      backgroundColor: "#594F80",
+      backgroundColor: "#FFF",
       marginBottom: 15,
       color: "#312C50",
       fontSize: 16,

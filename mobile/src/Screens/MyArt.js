@@ -45,7 +45,7 @@ const Profile = () => {
       <Block flex style={styles.profile}>
         <Block flex>
           <ImageBackground
-            source={require("../assets/UserHome.jpg")}
+            source={require("../assets/My.jpg")}
             style={styles.profileContainer}
             imageStyle={styles.profileImage}>
             <Block flex style={styles.profileDetails}>

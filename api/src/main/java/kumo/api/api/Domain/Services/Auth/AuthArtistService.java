@@ -51,6 +51,7 @@ public class AuthArtistService {
                 newUser.setEmail(body.getEmail());
                 newUser.setName(body.getName());
                 newUser.setCreatedAt(new Date(System.currentTimeMillis()));
+                newUser.setUpdateAt(new Date(System.currentTimeMillis()));
                 newUser.setRole("artist");
                 newUser.setPhone(body.getPhone());
                 this.repository.save(newUser);

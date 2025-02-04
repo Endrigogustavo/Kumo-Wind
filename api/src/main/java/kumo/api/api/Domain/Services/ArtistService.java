@@ -1,5 +1,6 @@
 package kumo.api.api.Domain.Services;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -26,13 +27,11 @@ public class ArtistService implements ArtistInterface {
     @Autowired
     private TokenService jwtConfig;
 
-    @SneakyThrows
     public List<ArtistSchema> getAllArtist(){
             List<ArtistSchema> artists = repository.findAll();
             return artists;
     }
 
-    @SneakyThrows
     public ArtistSchema findMyArtist(String token) {
             if (token == null || !jwtConfig.isTokenValid(token)) throw new JwtException("Token inválido ou ausente");
 
@@ -41,7 +40,6 @@ public class ArtistService implements ArtistInterface {
             return optionalArtist.orElse(null);
     }
  
-    @SneakyThrows
     public UpdateResponseDTO updateArtist(@Valid UpdateUserDTO artist, String token){
             Optional<ArtistSchema> artistEmailExist = repository.findByEmail(artist.getEmail());
             if(artistEmailExist.isPresent()) return null;
@@ -52,12 +50,12 @@ public class ArtistService implements ArtistInterface {
             if (artist.getName() != null) artistToUpdate.setName(artist.getName());
             if (artist.getEmail() != null) artistToUpdate.setEmail(artist.getEmail());
             if (artist.getPhone() != null) artistToUpdate.setPhone(artist.getPhone());
+            artistToUpdate.setUpdateAt(new Date(System.currentTimeMillis()));
 
             ArtistSchema updated = repository.save(artistToUpdate);
             return new UpdateResponseDTO(updated.getName(), updated.getEmail(), updated.getPhone());
     }
 
-    @SneakyThrows
     public String deleteArtist(String token){
             if (token == "null") return "Erro ao deletar artista: token não encontrado.";
     

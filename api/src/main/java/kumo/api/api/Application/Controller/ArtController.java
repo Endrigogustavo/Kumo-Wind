@@ -32,8 +32,6 @@ public class ArtController {
 
     private final ArtService artService;
 
-    @ApiOperation(value = "Faz o upload de uma imagem", consumes = "multipart/form-data")
-
     @PostMapping("/create")
     public ResponseEntity<?> createArt(
             @RequestParam("file") MultipartFile art,
@@ -48,7 +46,7 @@ public class ArtController {
         }
     }
 
-    @GetMapping("/getArts/")
+    @GetMapping("/getArts")
     public List<ArtSchema> getArtByArtist(@CookieValue(value = "token", defaultValue = "null") String token) {
         return artService.getArtByArtist(token);
     }
@@ -63,7 +61,7 @@ public class ArtController {
         }
     }
 
-    @DeleteMapping("/delete/{artId}")
+    @DeleteMapping("/delete/{id}")
     public ResponseEntity<?> deleteArt(@PathVariable String id) throws Exception {
         String response = artService.deleteArt(id);
         return ResponseEntity.ok().body(response);
@@ -75,7 +73,7 @@ public class ArtController {
         return ResponseEntity.ok().body(new UpdateArtResponseDTO(response.getTitle(), response.getDescription()));
     }
 
-    @PatchMapping("/updateImg/{imageId}")
+    @PatchMapping("/updateImg/{id}")
     public ResponseEntity<?> updateImgArt(@PathVariable String id, MultipartFile file) throws Exception {
         return ResponseEntity.ok().body(artService.updateArtIMG(file, id));
     }
@@ -86,6 +84,16 @@ public class ArtController {
             return ResponseEntity.ok().body(artService.getAllArts());
         } catch (Exception e) {
             return ResponseEntity.ok().body(null);
+        }
+    }
+
+    @PatchMapping("/giveLike/{id}")
+    public ResponseEntity<?> likeArt(@PathVariable String id){
+        try {
+            artService.likesArt(id);
+            return ResponseEntity.ok().body("Liked");
+        } catch (Exception e) {
+           return ResponseEntity.badRequest().body("Error to give like: " + e.getMessage());
         }
     }
 }

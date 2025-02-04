@@ -83,7 +83,7 @@ export default StyleSheet.create({
     options: {
       padding: 10,
       backgroundColor: "#312C50",
-      marginTop: -10,
+      marginTop: 0,
       margin: 5,
     },
     thumb: {

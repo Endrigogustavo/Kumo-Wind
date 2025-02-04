@@ -40,4 +40,8 @@ public class ArtSchema {
     private String idArtist;
 
     private Date createdAt;
+
+    private Date updatedAt;
+
+    private int likes;
 }
