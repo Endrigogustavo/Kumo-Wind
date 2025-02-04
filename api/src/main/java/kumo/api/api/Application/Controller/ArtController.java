@@ -24,7 +24,6 @@ import kumo.api.api.Application.Dto.Response.UpdateArtResponseDTO;
 import kumo.api.api.Domain.Entity.ArtSchema;
 import kumo.api.api.Domain.Services.ArtService;
 import lombok.RequiredArgsConstructor;
-import net.bytebuddy.asm.Advice.Return;
 
 @RestController
 @RequestMapping("/art")
@@ -34,19 +33,19 @@ public class ArtController {
     private final ArtService artService;
 
     @ApiOperation(value = "Faz o upload de uma imagem", consumes = "multipart/form-data")
-   
+
     @PostMapping("/create")
     public ResponseEntity<?> createArt(
-        @RequestParam("file") MultipartFile art,
-        @RequestParam("title") String title, 
-        @RequestParam("description") String description,
-        @CookieValue(name = "token", defaultValue = "null") String token){
-            try {
-                String URL = this.artService.createArt(art, title, description, token);
-                return ResponseEntity.ok().body(new CreateArtResponseDTO(title, description, URL));
-            } catch (Exception e) {
-                return null;
-            }
+            @RequestParam("file") MultipartFile art,
+            @RequestParam("title") String title,
+            @RequestParam("description") String description,
+            @CookieValue(name = "token", defaultValue = "null") String token) {
+        try {
+            String URL = this.artService.createArt(art, title, description, token);
+            return ResponseEntity.ok().body(new CreateArtResponseDTO(title, description, URL));
+        } catch (Exception e) {
+            return null;
+        }
     }
 
     @GetMapping("/getArts/")
@@ -65,24 +64,28 @@ public class ArtController {
     }
 
     @DeleteMapping("/delete/{artId}")
-    public ResponseEntity<?> deleteArt(@PathVariable String id) throws Exception{
+    public ResponseEntity<?> deleteArt(@PathVariable String id) throws Exception {
         String response = artService.deleteArt(id);
         return ResponseEntity.ok().body(response);
     }
 
     @PutMapping("/update")
-    public ResponseEntity<?> updateArt(UpdateArtRequestDTO art) throws Exception{
+    public ResponseEntity<?> updateArt(UpdateArtRequestDTO art) throws Exception {
         ArtSchema response = artService.updateArt(art);
         return ResponseEntity.ok().body(new UpdateArtResponseDTO(response.getTitle(), response.getDescription()));
     }
 
     @PatchMapping("/updateImg/{imageId}")
-    public ResponseEntity<?> updateImgArt(@PathVariable String id, MultipartFile file) throws Exception{
+    public ResponseEntity<?> updateImgArt(@PathVariable String id, MultipartFile file) throws Exception {
         return ResponseEntity.ok().body(artService.updateArtIMG(file, id));
     }
 
     @GetMapping("/getAllArts")
-    public ResponseEntity<?> getAllArts(){
-        return ResponseEntity.ok().body(null);
+    public ResponseEntity<?> getAllArts() {
+        try {
+            return ResponseEntity.ok().body(artService.getAllArts());
+        } catch (Exception e) {
+            return ResponseEntity.ok().body(null);
+        }
     }
 }

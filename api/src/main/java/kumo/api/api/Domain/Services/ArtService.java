@@ -53,6 +53,7 @@ public class ArtService {
         return artPath;
     }
 
+    @SuppressWarnings("unchecked")
     public String uploadImage(MultipartFile file) throws IOException {
         Map<String, Object> options = new HashMap<>(); 
         Map<String, Object> uploadResult = cloudinary.uploader().upload(file.getBytes(), options);
@@ -83,5 +84,10 @@ public class ArtService {
         String artPath = uploadImage(file);
         if(!artPath.isEmpty()) newArt.setFilePath(artPath);
         return artRepository.save(newArt);
+    }
+
+    public List<ArtSchema> getAllArts(){
+        List<ArtSchema> arts = artRepository.findAll();
+        return arts;
     }
 }
