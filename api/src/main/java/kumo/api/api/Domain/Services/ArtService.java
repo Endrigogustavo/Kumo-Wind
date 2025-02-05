@@ -71,25 +71,19 @@ public class ArtService {
         return "Art deletado com sucesso";
     }
 
-    public ArtSchema updateArt(UpdateArtRequestDTO art) {
-        ArtSchema newArt = artRepository.findById(art.id())
+    public ArtSchema updateArt(UpdateArtRequestDTO art, MultipartFile file, String id) throws IOException  {
+        ArtSchema newArt = artRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Arte não encontrada"));
 
+        String artPath = uploadImage(file);
+        if (!artPath.isEmpty())
+            newArt.setFilePath(artPath);
         if (art.description() != null)
             newArt.setDescription(art.description());
         if (art.title() != null)
             newArt.setTitle(art.title());
         newArt.setUpdatedAt(new Date(System.currentTimeMillis()));
 
-        return artRepository.save(newArt);
-    }
-
-    public ArtSchema updateArtIMG(MultipartFile file, String id) throws IOException {
-        ArtSchema newArt = artRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Arte não encontrada"));
-        String artPath = uploadImage(file);
-        if (!artPath.isEmpty())
-            newArt.setFilePath(artPath);
         return artRepository.save(newArt);
     }
 

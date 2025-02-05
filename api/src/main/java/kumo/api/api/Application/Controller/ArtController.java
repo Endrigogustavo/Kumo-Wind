@@ -66,15 +66,10 @@ public class ArtController {
         return ResponseEntity.ok().body(response);
     }
 
-    @PutMapping("/update")
-    public ResponseEntity<?> updateArt(UpdateArtRequestDTO art) throws Exception {
-        ArtSchema response = artService.updateArt(art);
+    @PutMapping("/update/{id}")
+    public ResponseEntity<?> updateArt(@PathVariable String id, UpdateArtRequestDTO art, MultipartFile file) throws Exception {
+        ArtSchema response = artService.updateArt(art, file, id);
         return ResponseEntity.ok().body(new UpdateArtResponseDTO(response.getTitle(), response.getDescription()));
-    }
-
-    @PatchMapping("/updateImg/{id}")
-    public ResponseEntity<?> updateImgArt(@PathVariable String id, MultipartFile file) throws Exception {
-        return ResponseEntity.ok().body(artService.updateArtIMG(file, id));
     }
 
     @GetMapping("/getAllArts")

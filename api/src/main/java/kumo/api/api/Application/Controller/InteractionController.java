@@ -11,22 +11,28 @@ import org.springframework.web.bind.annotation.RestController;
 
 import kumo.api.api.Domain.Services.InteractionService;
 
+//Configurações do controller
 @RestController
 @RequestMapping("/interaction")
 public class InteractionController {
 
+    //Instancia da classe InteractionService
     @Autowired
     private InteractionService interactionService;
 
+    //Rota de adicionar a arte como favoritada pelo artista com base no id da arte enviada pela url e o cookie do artista 
     @PostMapping("/favoriteArt/{artId}")
     public ResponseEntity<?> addFavoriteArt(@CookieValue(name = "token", defaultValue = "null") String id, @PathVariable String artId){
         try {
+            //Retorna uma resposta da classe de add arte aos favoritos da service
             return ResponseEntity.ok().body(interactionService.addFavorite(id, artId));
         } catch (Exception e) {
+            //Caso algo imprevisto 
             return ResponseEntity.badRequest().body("Erro ao salvar a imagem");
         }
     }
 
+    //Rota de dar like em alguma arte enviando o id da arte pela url e o id do artista pelo cookie
     @PostMapping("/likeArt/{artId}")
     public ResponseEntity<?> addLikeArt(@CookieValue(name = "token", defaultValue = "null") String id, @PathVariable String artId){
         try {
