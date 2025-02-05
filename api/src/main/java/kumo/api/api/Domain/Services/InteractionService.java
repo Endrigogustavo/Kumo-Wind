@@ -1,6 +1,7 @@
 package kumo.api.api.Domain.Services;
 
 import java.util.Date;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -37,13 +38,41 @@ public class InteractionService {
     public String addFavorite(String userId, String artId) throws Exception{
         String idToken = tokenService.extractUserId(userId);
 
-        if(favoriteRepository.existsByUserIdAndArtId(idToken, artId)) return "Voçê já deu like nessa arte!!!";
+        if(favoriteRepository.existsByUserIdAndArtId(idToken, artId)) return "Você já deu like nessa arte!!!";
         FavoriteSchema favorite = new FavoriteSchema();
         favorite.setUserId(idToken);
         favorite.setArtId(artId);
         favorite.setCreatedAt(new Date(System.currentTimeMillis()));
         favoriteRepository.save(favorite);
-        return "Art curtida!!!";
+        return "Art Salva!!!";
     }
 
+    public LikesSchema viewMyArtLikes(String artId){
+        try {
+            LikesSchema myLikes = likeRepository.findByArtId(artId);
+            return myLikes;
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    public List<LikesSchema> viewLikes(String userId){
+        try {
+            String idToken = tokenService.extractUserId(userId);
+            List<LikesSchema> myLikes = likeRepository.findByUserId(idToken);
+            return myLikes;
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    public List<FavoriteSchema> viewMyFavoriteArts(String userId){
+        try {
+            String idToken = tokenService.extractUserId(userId);
+            List<FavoriteSchema> myFavorites = favoriteRepository.findByUserId(idToken);
+            return myFavorites;
+        } catch (Exception e) {
+            return null;
+        }
+    }
 }
