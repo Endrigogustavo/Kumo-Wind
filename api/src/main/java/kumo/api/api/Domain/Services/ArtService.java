@@ -5,7 +5,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -51,7 +50,6 @@ public class ArtService {
         newArt.setFilePath(artPath);
         newArt.setTitle(title);
         newArt.setUpdatedAt(new Date(System.currentTimeMillis()));
-        newArt.setLikes(0);
         artRepository.save(newArt);
         return artPath;
     }
@@ -102,7 +100,7 @@ public class ArtService {
 
     public void likesArt(String id){
         ArtSchema art = artRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Arte não encontrada"));; 
-        art.setLikes(art.getLikes() + 1);
+        
         artRepository.save(art);
     }
 }

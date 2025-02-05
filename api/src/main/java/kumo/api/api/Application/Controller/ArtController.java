@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import io.swagger.annotations.ApiOperation;
 import kumo.api.api.Application.Dto.Request.UpdateArtRequestDTO;
 import kumo.api.api.Application.Dto.Response.CreateArtResponseDTO;
 import kumo.api.api.Application.Dto.Response.UpdateArtResponseDTO;
@@ -84,16 +83,6 @@ public class ArtController {
             return ResponseEntity.ok().body(artService.getAllArts());
         } catch (Exception e) {
             return ResponseEntity.ok().body(null);
-        }
-    }
-
-    @PatchMapping("/giveLike/{id}")
-    public ResponseEntity<?> likeArt(@PathVariable String id){
-        try {
-            artService.likesArt(id);
-            return ResponseEntity.ok().body("Liked");
-        } catch (Exception e) {
-           return ResponseEntity.badRequest().body("Error to give like: " + e.getMessage());
         }
     }
 }

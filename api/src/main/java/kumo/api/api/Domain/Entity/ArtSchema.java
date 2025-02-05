@@ -43,5 +43,4 @@ public class ArtSchema {
 
     private Date updatedAt;
 
-    private int likes;
 }
