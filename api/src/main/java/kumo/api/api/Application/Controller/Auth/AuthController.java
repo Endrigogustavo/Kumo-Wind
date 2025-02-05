@@ -42,7 +42,12 @@ public class AuthController {
     }
 
     @PostMapping("/logout")
-    public ResponseEntity<?> logout(@CookieValue(value = "token", defaultValue = "null") @Valid String token){
-        return null;
+    public ResponseEntity<String> logout(@CookieValue(name = "token", defaultValue="null") String token, HttpServletResponse response){
+        try {
+            auth.logoutArtist(token, response);
+            return ResponseEntity.ok().body("Usuario deslogado com sucesso!!!");
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Não foi possivel fazer logout: " + e.getMessage());
+        }
     }
 }

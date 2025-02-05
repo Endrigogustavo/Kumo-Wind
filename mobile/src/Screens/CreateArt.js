@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { View, Image, TextInput, TouchableOpacity, Text, Button } from "react-native";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from "axios";
-import styles from '../Style/StyleLogin'
+import styles from '../Style/StyleCreateArt'
 import * as ImagePicker from "expo-image-picker";
 
 
@@ -34,7 +34,7 @@ export default function CreateArt({ navigation }) {
         });
         formData.append("title", title);
         formData.append("description", description);
-    
+
         try {
             const token = await AsyncStorage.getItem('userToken');
             const response = await axios.post(
@@ -67,8 +67,8 @@ export default function CreateArt({ navigation }) {
 
             <TextInput
                 style={styles.input}
-                placeholder="Email"
-                placeholderTextColor="#888"
+                placeholder="Titulo"
+                placeholderTextColor="#FFF"
                 value={title}
                 onChangeText={setTitle}
                 keyboardType="email-address"
@@ -76,20 +76,21 @@ export default function CreateArt({ navigation }) {
 
             <TextInput
                 style={styles.input}
-                placeholder="Senha"
-                placeholderTextColor="#888"
+                placeholder="Descrição"
+                placeholderTextColor="#FFF"
                 value={description}
                 onChangeText={setDescription}
-                secureTextEntry
             />
 
+            <TouchableOpacity onPress={pickImage} style={styles.button}>
+                <Text style={styles.buttonText}>Selecionar Imagem</Text>
+            </TouchableOpacity>
+            {image && <Image source={{ uri: image }} style={{ borderRadius: 15, width: 200, height: 200, marginVertical: 10 }} />}
 
             <TouchableOpacity style={styles.customButton} >
-                <Button title="Selecionar Imagem" onPress={pickImage} />
-                {image && <Image source={{ uri: image }} style={{ width: 200, height: 500, marginVertical: 10 }} />}
-                <Button title={uploading ? "Enviando..." : "Enviar Imagem, Título e Descrição"} onPress={Create} disabled={uploading} />
-
+                <Button style={styles.buttonText} title={uploading ? "Enviando..." : "Enviar Imagem"}  color={'#FFF'} onPress={Create} disabled={uploading} />
             </TouchableOpacity>
+
 
         </View>
     );

@@ -40,27 +40,12 @@ const Profile = () => {
     fetchData();
   }, []);
 
-  const categories = [
-    { name: 'Painting', image: require('../assets/images/painting.jpg') },
-    { name: 'Sculpture', image: require('../assets/images/sculpture.jpg') },
-    { name: 'Photography', image: require('../assets/images/photography.jpg') },
-    { name: 'Digital Art', image: require('../assets/images/digital.jpg') },
-    { name: 'IA', image: require('../assets/images/ia.jpg') },
-    { name: 'Printmaking', image: require('../assets/images/printmaking.jpeg') },
-  ];
-
-  const TopWeek = [
-    { name: 'Painting', image: require('../assets/topart/1.jpg') },
-    { name: 'Sculpture', image: require('../assets/topart/2.jpg') },
-    { name: 'Photography', image: require('../assets/topart/3.jpg') },
-  ];
-
   return (
     <ScrollView showsVerticalScrollIndicator={false} style={styles.home}>
       <Block flex style={styles.profile}>
         <Block flex>
           <ImageBackground
-            source={require("../assets/UserHome.jpg")}
+            source={require("../assets/My.jpg")}
             style={styles.profileContainer}
             imageStyle={styles.profileImage}>
             <Block flex style={styles.profileDetails}>
@@ -69,40 +54,6 @@ const Profile = () => {
               </Block>
             </Block>
           </ImageBackground>
-        </Block>
-
-        {/* Seção de Categorias */}
-        <Block style={styles.categories}>
-          <Text style={styles.text}>Art Categories</Text>
-          <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.categoriesScroll}>
-            {categories.map((category, index) => (
-              <Block key={index} style={styles.categoryItem}>
-                <Image
-                  source={category.image}
-                  resizeMode="cover"
-                  style={styles.imgcat}
-                />
-                <Text style={styles.categoryText}>
-                  {category.name}
-                </Text>
-              </Block>
-            ))}
-          </ScrollView>
-        </Block>
-
-        <Block style={styles.categories}>
-          <Text style={styles.text}>Top of week</Text>
-          <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.categoriesScroll}>
-            {TopWeek.map((TopWeek, index) => (
-              <Block key={index} style={styles.top}>
-                <Image
-                  source={TopWeek.image}
-                  resizeMode="cover"
-                  style={styles.imgtop}
-                />
-              </Block>
-            ))}
-          </ScrollView>
         </Block>
 
         {/* Seção de Obras de Arte */}

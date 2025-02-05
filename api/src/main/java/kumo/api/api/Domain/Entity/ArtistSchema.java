@@ -37,6 +37,8 @@ public class ArtistSchema {
 
     private Date createdAt;
 
+    private Date updateAt;
+
     public ArtistSchema() {
     }
 

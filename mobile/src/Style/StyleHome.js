@@ -12,7 +12,7 @@ export default StyleSheet.create({
   logo: {
     width: 150 * PixelRatio.get(),
     height: 150 * PixelRatio.get(),
-    marginTop: -10,
+    marginTop: 75,
     marginBottom: 20,
     resizeMode: "contain",
     position: "relative"

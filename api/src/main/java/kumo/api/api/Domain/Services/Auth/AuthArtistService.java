@@ -7,6 +7,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import io.jsonwebtoken.JwtException;
+import io.jsonwebtoken.io.IOException;
 import jakarta.servlet.http.HttpServletResponse;
 import kumo.api.api.Application.Configs.Security.CookieConfig;
 import kumo.api.api.Application.Configs.Security.TokenService;
@@ -50,6 +51,7 @@ public class AuthArtistService {
                 newUser.setEmail(body.getEmail());
                 newUser.setName(body.getName());
                 newUser.setCreatedAt(new Date(System.currentTimeMillis()));
+                newUser.setUpdateAt(new Date(System.currentTimeMillis()));
                 newUser.setRole("artist");
                 newUser.setPhone(body.getPhone());
                 this.repository.save(newUser);
@@ -63,7 +65,12 @@ public class AuthArtistService {
         } catch (Exception e) {
             return "Erro ao fazer o registro " +e.getMessage();
         }
-        
         return null;
+    }
+
+    public String logoutArtist(String token, HttpServletResponse response) throws Exception, IOException{
+        if(!tokenService.isTokenValid(token)) return "Token invalido";
+        cookie.DeleteCookies(response);
+        return "Sucesso ao fazer logout!!!";
     }
 }

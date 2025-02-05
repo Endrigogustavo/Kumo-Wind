@@ -3,6 +3,8 @@ import Home from './Screens/HomeScreen';
 import Login from './Screens/Login';
 import UserHome from './Screens/ArtGalery';
 import CreateArt from './Screens/CreateArt';
+import Register from './Screens/RegisterUser';
+import MyArts from './Screens/MyArt';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
@@ -13,18 +15,19 @@ const Tab = createBottomTabNavigator();
 
 // Barra de navegação inferior
 function BottomTabs() {
+  
   return (
     <Tab.Navigator
       screenOptions={({ route }) => ({
         tabBarIcon: ({ focused, color, size }) => {
           let iconName;
 
-          if (route.name === 'UserHome') {
+          if (route.name === 'Arts') {
+            iconName = focused ? 'cloud' : 'image-outline';
+          } else if (route.name === 'Create') {
+            iconName = focused ? 'add-circle-outline' : 'add';
+          } else if (route.name === 'User') {
             iconName = focused ? 'person' : 'person-outline';
-          } else if (route.name === 'AnotherScreen') {
-            iconName = focused ? 'grid' : 'grid-outline';
-          } else if (route.name === 'teste') {
-            iconName = focused ? 'grid' : 'grid-outline';
           }
 
           return <Ionicons name={iconName} size={size} color={color} />;
@@ -39,15 +42,8 @@ function BottomTabs() {
       })}
     >
       <Tab.Screen
-        name="UserHome"
+        name="Arts"
         component={UserHome}
-        options={{
-          headerShown: false,
-        }}
-      />
-      <Tab.Screen
-        name="AnotherScreen"
-        component={Login}
         options={{
           headerShown: false,
         }}
@@ -59,6 +55,14 @@ function BottomTabs() {
           headerShown: false,
         }}
       />
+      <Tab.Screen
+        name="User"
+        component={MyArts}
+        options={{
+          headerShown: false,
+        }}
+      />
+
     </Tab.Navigator>
   );
 }
@@ -67,37 +71,25 @@ export default function App() {
   return (
     <NavigationContainer>
       <Stack.Navigator>
-        {/* Tela Home - Sem barra de navegação inferior e sem topbar */}
         <Stack.Screen name="Home" component={Home} options={{
           title: '',
-          headerStyle: {
-            backgroundColor: '#312C50',
-          },
-          headerTintColor: '#312C50',
-          headerTitleStyle: {
-            fontWeight: 'bold',
-          },
+          headerShown: false,
+
         }} />
 
-        {/* Tela Login - Sem barra de navegação inferior */}
         <Stack.Screen name="Login" component={Login} options={{
-          title: 'Login',
-          headerStyle: {
-            backgroundColor: '#312C50',
-          },
-          headerTintColor: '#fff',
-          headerTitleStyle: {
-            fontWeight: 'bold',
-          },
+
+          title: '',
+          headerShown: false,
+
         }} />
 
-        {/* Tela UserHome - Com barra de navegação inferior e sem topbar */}
         <Stack.Screen
           name="UserHome"
           component={BottomTabs}
           options={{
             title: '',
-            headerShown: false,  
+            headerShown: false,
           }}
         />
 
@@ -106,9 +98,16 @@ export default function App() {
           component={BottomTabs}
           options={{
             title: '',
-            headerShown: false, 
+            headerShown: false,
           }}
+        />
 
+        <Stack.Screen
+          name="Register"
+          component={Register}
+          options={{
+            headerShown: false,
+          }}
         />
       </Stack.Navigator>
     </NavigationContainer>

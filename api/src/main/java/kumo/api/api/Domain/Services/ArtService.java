@@ -5,7 +5,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,7 +18,6 @@ import kumo.api.api.Domain.Entity.ArtSchema;
 import kumo.api.api.Domain.Entity.ArtistSchema;
 import kumo.api.api.Repository.ArtRepository;
 import kumo.api.api.Repository.UserRepository;
-
 
 @Service
 public class ArtService {
@@ -38,7 +36,8 @@ public class ArtService {
 
     public String createArt(MultipartFile art, String title, String description, String token) throws IOException {
         String artPath = uploadImage(art);
-        if(artPath == null) return null;
+        if (artPath == null)
+            return null;
 
         String id = tokenService.extractUserId(token);
         ArtistSchema artist = repository.findById(id)
@@ -50,12 +49,14 @@ public class ArtService {
         newArt.setIdArtist(artist.getId());
         newArt.setFilePath(artPath);
         newArt.setTitle(title);
+        newArt.setUpdatedAt(new Date(System.currentTimeMillis()));
         artRepository.save(newArt);
         return artPath;
     }
 
+    @SuppressWarnings("unchecked")
     public String uploadImage(MultipartFile file) throws IOException {
-        Map<String, Object> options = new HashMap<>(); 
+        Map<String, Object> options = new HashMap<>();
         Map<String, Object> uploadResult = cloudinary.uploader().upload(file.getBytes(), options);
         return (String) uploadResult.get("url");
     }
@@ -65,24 +66,41 @@ public class ArtService {
         return artRepository.findByidArtist(id);
     }
 
-    public String deleteArt(String id) throws Exception{
+    public String deleteArt(String id) throws Exception {
         artRepository.deleteById(id);
         return "Art deletado com sucesso";
     }
 
-    public ArtSchema updateArt(UpdateArtRequestDTO art){
-        ArtSchema newArt = artRepository.findById(art.id()).orElseThrow(() -> new IllegalArgumentException("Arte não encontrada"));
+    public ArtSchema updateArt(UpdateArtRequestDTO art) {
+        ArtSchema newArt = artRepository.findById(art.id())
+                .orElseThrow(() -> new IllegalArgumentException("Arte não encontrada"));
 
-        if(art.description() != null) newArt.setDescription(art.description());
-        if(art.title() != null) newArt.setTitle(art.title());
+        if (art.description() != null)
+            newArt.setDescription(art.description());
+        if (art.title() != null)
+            newArt.setTitle(art.title());
+        newArt.setUpdatedAt(new Date(System.currentTimeMillis()));
 
         return artRepository.save(newArt);
     }
 
-    public ArtSchema updateArtIMG(MultipartFile file, String id) throws IOException{
-        ArtSchema newArt = artRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Arte não encontrada"));
+    public ArtSchema updateArtIMG(MultipartFile file, String id) throws IOException {
+        ArtSchema newArt = artRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Arte não encontrada"));
         String artPath = uploadImage(file);
-        if(!artPath.isEmpty()) newArt.setFilePath(artPath);
+        if (!artPath.isEmpty())
+            newArt.setFilePath(artPath);
         return artRepository.save(newArt);
+    }
+
+    public List<ArtSchema> getAllArts() {
+        List<ArtSchema> arts = artRepository.findAll();
+        return arts;
+    }
+
+    public void likesArt(String id){
+        ArtSchema art = artRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Arte não encontrada"));; 
+        
+        artRepository.save(art);
     }
 }

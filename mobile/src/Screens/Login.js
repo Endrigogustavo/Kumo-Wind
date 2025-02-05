@@ -1,16 +1,21 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { View, Image, TextInput, TouchableOpacity, Text, Button } from "react-native";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from "axios";
 import styles from '../Style/StyleLogin'
+import { useNavigation } from '@react-navigation/native';
 
-export default function LoginScreen({ navigation }) {
+export default function LoginScreen() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
+
+  const navigation = useNavigation();
 
   const handleLogin = async (email, password) => {
     try {
+      setLoading(true);
       const loginData = { email: String(email), password: String(password) };
 
       const response = await axios.post(
@@ -21,13 +26,17 @@ export default function LoginScreen({ navigation }) {
 
       if (response.status === 200) {
         const tokenAuth = "Bearer " + response.data.token;
-        await AsyncStorage.setItem('userToken', tokenAuth);
-        navigation.navigate('UserHome')
+        AsyncStorage.setItem('userToken', tokenAuth).then(() => {
+          navigation.navigate('UserHome');
+        });
       } else {
         setError(response.data.message || 'Erro ao fazer login');
       }
     } catch (error) {
       setError('Erro na requisição: ' + error.message);
+    }
+    finally {
+      setLoading(false);
     }
   };
 
@@ -40,7 +49,7 @@ export default function LoginScreen({ navigation }) {
       <TextInput
         style={styles.input}
         placeholder="Email"
-        placeholderTextColor="#888"
+        placeholderTextColor="#FFF"
         value={email}
         onChangeText={setEmail}
         keyboardType="email-address"
@@ -49,17 +58,19 @@ export default function LoginScreen({ navigation }) {
       <TextInput
         style={styles.input}
         placeholder="Senha"
-        placeholderTextColor="#888"
+        placeholderTextColor="#FFF"
         value={password}
         onChangeText={setPassword}
         secureTextEntry
       />
 
       <TouchableOpacity style={styles.customButton} >
-        <Button style={styles.buttonText} title="Login" onPress={() => handleLogin(email, password)} />
+        <Button title={loading ? "Carregando..." : "Login"} disabled={loading} color={'#FFF'} onPress={() => handleLogin(email, password)} />
         {error && <Text>{error}</Text>}
       </TouchableOpacity>
 
+      <Button title={"Register"}  color={'#FFF'}  onPress={() => navigation.navigate('Register')} />
+      
     </View>
   );
 }
