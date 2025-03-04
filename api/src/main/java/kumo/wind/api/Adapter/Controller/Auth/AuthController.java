@@ -27,9 +27,7 @@ public class AuthController {
     {
         try {
             String token = auth.loginArtist(body, response);
-            if("Erro ao fazer login: Usuario não encontrado".equals(token)) {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuário não encontrado");
-            }
+            if("Erro ao fazer login: Usuario não encontrado".equals(token)) return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuário não encontrado");
             return ResponseEntity.ok(new LoginAndCreateReponseDTO(body.email(), token));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuário não encontrado");
