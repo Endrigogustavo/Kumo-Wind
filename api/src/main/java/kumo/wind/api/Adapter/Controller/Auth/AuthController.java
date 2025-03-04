@@ -1,6 +1,8 @@
 package kumo.wind.api.Adapter.Controller.Auth;
 
 import lombok.RequiredArgsConstructor;
+
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -25,9 +27,12 @@ public class AuthController {
     {
         try {
             String token = auth.loginArtist(body, response);
+            if("Erro ao fazer login: Usuario não encontrado".equals(token)) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuário não encontrado");
+            }
             return ResponseEntity.ok(new LoginAndCreateReponseDTO(body.email(), token));
         } catch (Exception e) {
-            return ResponseEntity.badRequest().build();
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuário não encontrado");
         }
     }
 

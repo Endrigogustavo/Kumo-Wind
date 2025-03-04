@@ -29,7 +29,7 @@ public class AuthArtistService {
     public String loginArtist(LoginRequestDTO body, HttpServletResponse response) throws JwtException {
         try {
             ArtistSchema user = this.repository.findByEmail(body.email())
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new RuntimeException("Usuario não encontrado"));
         if (passwordEncoder.matches(body.password(), user.getPassword())) {
             String tokenId = tokenService.generateTokenId(user.getId());
             cookie.CreateCookies(response, tokenId);
