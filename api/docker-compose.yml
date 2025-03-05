@@ -1,0 +1,20 @@
+version: "3.8"
+
+services:
+  backend:
+    build: .
+    container_name: meu-backend
+    ports:
+      - "8081:8081"
+    environment:
+      SPRING_DATA_MONGODB_URI: ${DB_URL}
+      SPRING_PROFILES_ACTIVE: prod
+      CLOUD_NAME_CLOUDINARY: ${CLOUD_NAME_CLOUDINARY}
+      API_KEY_CLOUDINARY: ${API_KEY_CLOUDINARY}
+      API_SECRET_CLOUDINARY: ${API_SECRET_CLOUDINARY}
+    networks:
+      - backend_network
+
+networks:
+  backend_network:
+    driver: bridge

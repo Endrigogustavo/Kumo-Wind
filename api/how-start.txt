@@ -6,3 +6,11 @@ git clone "URL" --branch "NomeBranch" --single-branch
 
 mvn clean package
 java -jar target/seu-arquivo.jar
+
+Docker:
+docker build -t <nomeDaImagem>
+docker ps
+docker run -p 8080:8081 <nomeDaImagem>
+
+docker-compose up -d
+docker-compose up --build

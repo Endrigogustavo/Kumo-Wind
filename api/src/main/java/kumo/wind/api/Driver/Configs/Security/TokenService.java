@@ -66,7 +66,6 @@ public class TokenService {
 
     public boolean isTokenValid(String token) {
         try {
-            Algorithm algorithm = Algorithm.HMAC256(secret);
             Date expirationDate = JWT.decode(token).getExpiresAt();
             return expirationDate != null && expirationDate.after(new Date());
         } catch (JWTVerificationException exception) {

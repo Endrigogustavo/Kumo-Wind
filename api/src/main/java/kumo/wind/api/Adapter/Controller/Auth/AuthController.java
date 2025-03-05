@@ -23,8 +23,7 @@ public class AuthController {
     private final AuthArtistService auth;
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody @Valid LoginRequestDTO body, HttpServletResponse response)
-    {
+    public ResponseEntity<?> login(@RequestBody @Valid LoginRequestDTO body, HttpServletResponse response){
         try {
             String token = auth.loginArtist(body, response);
             if("Erro ao fazer login: Usuario não encontrado".equals(token)) return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuário não encontrado");
