@@ -1,3 +1,8 @@
+Atualizar dependencias:
+mvn versions:use-latest-releases
+
+Clonar branch:
 git clone "URL" --branch "NomeBranch" --single-branch
+
 mvn clean package
 java -jar target/seu-arquivo.jar
