@@ -27,7 +27,7 @@ public class AuthController {
         try {
             String token = auth.loginArtist(body, response);
             if("Erro ao fazer login: Usuario não encontrado".equals(token)) return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuário não encontrado");
-            return ResponseEntity.ok(new LoginAndCreateReponseDTO(body.email(), token));
+            return ResponseEntity.status(HttpStatus.OK).body(new LoginAndCreateReponseDTO(body.email(), token));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuário não encontrado");
         }
@@ -37,9 +37,9 @@ public class AuthController {
     public ResponseEntity<?> register(@RequestBody @Valid CreateRequestDTO body, HttpServletResponse response) {
         try {
             String token = auth.registerArtist(body, response);
-            return ResponseEntity.ok(new LoginAndCreateReponseDTO(body.getName(), token));
+            return ResponseEntity.status(HttpStatus.OK).body(new LoginAndCreateReponseDTO(body.getName(), token));
         } catch (Exception e) {
-            return ResponseEntity.badRequest().build();
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
     }
 
@@ -47,9 +47,9 @@ public class AuthController {
     public ResponseEntity<String> logout(@CookieValue(name = "token", defaultValue="null") String token, HttpServletResponse response){
         try {
             auth.logoutArtist(token, response);
-            return ResponseEntity.ok().body("Usuario deslogado com sucesso!!!");
+            return ResponseEntity.status(HttpStatus.OK).body("Usuario deslogado com sucesso!!!");
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body("Não foi possivel fazer logout: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Não foi possivel fazer logout: " + e.getMessage());
         }
     }
 }

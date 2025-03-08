@@ -3,6 +3,7 @@ package kumo.wind.api.Adapter.Controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -45,24 +46,28 @@ public class ArtistController {
     public ResponseEntity<?> getAllArtists() {
         try {
             List<ArtistSchema> artists = service.getAllArtist();
-            return ResponseEntity.ok().body(artists);
+            return ResponseEntity.status(HttpStatus.OK).body(artists);
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body("Erro ao buscar artistas: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Erro ao buscar artistas: " + e.getMessage());
         }
     }
 
     @GetMapping("/artistById/{id}")
-    public ArtistSchema getByIdArtist(@PathVariable String id) {
-        return repository.findById(id).get();
+    public ResponseEntity<?> getByIdArtist(@PathVariable String id) {
+        try {
+            return ResponseEntity.status(HttpStatus.OK).body(repository.findById(id).get());
+        } catch (Exception e) {
+           return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Erro ao buscar artista: " + e.getMessage());
+        } 
     }
 
     @GetMapping("/findMyArtist")
     public ResponseEntity<?> findMyArtist(@CookieValue(value = "token", defaultValue = "null") String token) {
         try {
             ArtistSchema artis = service.findMyArtist(token); 
-            return ResponseEntity.ok().body(new GetMyUserInfoResponseDTO(artis.getName(), artis.getEmail(), artis.getPhone()));
+            return ResponseEntity.status(HttpStatus.OK).body(new GetMyUserInfoResponseDTO(artis.getName(), artis.getEmail(), artis.getPhone()));
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body("Erro ao buscar artista: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Erro ao buscar artista: " + e.getMessage());
         }
     }
 
@@ -71,18 +76,18 @@ public class ArtistController {
             @CookieValue(value = "token", defaultValue = "null") String token) {
         try {
             UpdateResponseDTO result = service.updateArtist(artist, token);
-            return ResponseEntity.ok(result);
+            return ResponseEntity.status(HttpStatus.OK).body(result);
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body("Erro ao atualizar artista: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Erro ao atualizar artista: " + e.getMessage());
         }
     }
 
     @DeleteMapping("/delete")
     public ResponseEntity<?> deleteArtist(@CookieValue(value = "token", defaultValue = "null") String token) {
         try {
-            return ResponseEntity.ok(service.deleteArtist(token));
+            return ResponseEntity.status(HttpStatus.OK).body(service.deleteArtist(token));
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body("Erro ao deletar artista: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Erro ao deletar artista: " + e.getMessage());
         }
     }
 }

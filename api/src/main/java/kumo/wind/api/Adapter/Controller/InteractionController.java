@@ -1,6 +1,7 @@
 package kumo.wind.api.Adapter.Controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,10 +26,10 @@ public class InteractionController {
     public ResponseEntity<?> addFavoriteArt(@CookieValue(name = "token", defaultValue = "null") String id, @PathVariable String artId){
         try {
             //Retorna uma resposta da classe de add arte aos favoritos da service
-            return ResponseEntity.ok().body(interactionService.addFavorite(id, artId));
+            return ResponseEntity.status(HttpStatus.OK).body(interactionService.addFavorite(id, artId));
         } catch (Exception e) {
             //Caso algo imprevisto 
-            return ResponseEntity.badRequest().body("Erro ao salvar a imagem");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Erro ao salvar a imagem");
         }
     }
 
@@ -36,36 +37,36 @@ public class InteractionController {
     @PostMapping("/likeArt/{artId}")
     public ResponseEntity<?> addLikeArt(@CookieValue(name = "token", defaultValue = "null") String id, @PathVariable String artId){
         try {
-            return ResponseEntity.ok().body(interactionService.addLike(id, artId));
+            return ResponseEntity.status(HttpStatus.OK).body(interactionService.addLike(id, artId));
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body("Erro ao salvar a imagem");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Erro ao salvar a imagem");
         }
     }
 
     @GetMapping("/getMyLikes")
     public ResponseEntity<?> getMyLikes(@CookieValue(name = "token", defaultValue = "null") String id){
         try {
-            return ResponseEntity.ok().body(interactionService.viewLikes(id));
+            return ResponseEntity.status(HttpStatus.OK).body(interactionService.viewLikes(id));
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body("Erro ao listar as curtidas " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Erro ao listar as curtidas " + e.getMessage());
         }
     }
 
     @GetMapping("/getMyArtLikes/{artId}")
     public ResponseEntity<?> getMyArtLikes(@PathVariable String artId){
         try {
-            return ResponseEntity.ok().body(interactionService.viewMyArtLikes(artId));
+            return ResponseEntity.status(HttpStatus.OK).body(interactionService.viewMyArtLikes(artId));
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body("Erro ao listar as curtidas " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Erro ao listar as curtidas " + e.getMessage());
         }
     }
 
     @GetMapping("/getMyFavoriteArts")
     public ResponseEntity<?> getMyFavoriteArts(@CookieValue(name = "token", defaultValue = "null") String id){
         try {
-            return ResponseEntity.ok().body(interactionService.viewLikes(id));
+            return ResponseEntity.status(HttpStatus.OK).body(interactionService.viewLikes(id));
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body("Erro ao listar as curtidas " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Erro ao listar as curtidas " + e.getMessage());
         }
     }
 }

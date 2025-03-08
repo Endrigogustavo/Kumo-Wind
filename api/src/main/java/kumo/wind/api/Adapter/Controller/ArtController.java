@@ -2,8 +2,7 @@ package kumo.wind.api.Adapter.Controller;
 
 import java.io.IOException;
 
-import java.util.List;
-
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -38,15 +37,19 @@ public class ArtController {
             @CookieValue(name = "token", defaultValue = "null") String token) {
         try {
             String URL = this.artService.createArt(art, title, description, token);
-            return ResponseEntity.ok().body(new CreateArtResponseDTO(title, description, URL));
+            return ResponseEntity.status(HttpStatus.CREATED).body(new CreateArtResponseDTO(title, description, URL));
         } catch (Exception e) {
-            return null;
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Erro ao salvar a arte: " + e.getMessage());
         }
     }
 
     @GetMapping("/getArts")
-    public List<ArtSchema> getArtByArtist(@CookieValue(value = "token", defaultValue = "null") String token) {
-        return artService.getArtByArtist(token);
+    public ResponseEntity<?> getArtByArtist(@CookieValue(value = "token", defaultValue = "null") String token) {
+        try {
+            return ResponseEntity.status(HttpStatus.OK).body(artService.getArtByArtist(token));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Erro ao buscar artes: " + e.getMessage());
+        }
     }
 
     @PostMapping("/upload")
@@ -61,8 +64,8 @@ public class ArtController {
 
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<?> deleteArt(@PathVariable String id) throws Exception {
-        String response = artService.deleteArt(id);
-        return ResponseEntity.ok().body(response);
+            String response = artService.deleteArt(id);
+            return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
     @PutMapping("/update/{id}")
@@ -74,9 +77,9 @@ public class ArtController {
     @GetMapping("/getAllArts")
     public ResponseEntity<?> getAllArts() {
         try {
-            return ResponseEntity.ok().body(artService.getAllArts());
+            return ResponseEntity.status(HttpStatus.OK).body(artService.getAllArts());
         } catch (Exception e) {
-            return ResponseEntity.ok().body(null);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Erro ao buscar artes: " + e.getMessage());
         }
     }
 }
