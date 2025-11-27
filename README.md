@@ -38,3 +38,5 @@ Certifique-se de ter os seguintes softwares instalados:
 Este projeto está licenciado sob a [MIT License](LICENSE).
 
 Esperamos que o **Kumo Wind** seja uma inspiração para artistas e admiradores da arte em todo o mundo. ✨
+
+npx expo start --tunnel -c
